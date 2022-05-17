@@ -1,4 +1,4 @@
-## ----setup, echo=FALSE, message=FALSE, warning=FALSE------------------------------------------------------------
+## ----setup, echo=FALSE, message=FALSE, warning=FALSE--------------------------------------------------------------
 # For ADNIMERGE, go to http://adni.loni.usc.edu/, https://adni.bitbucket.io/
 
 library(Hmisc)
@@ -18,6 +18,7 @@ library(tidyverse)
 
 options(digits=3)
 
+xaringanExtra::use_tile_view() # type 'o' to invoke tile view
 theme_set(theme_bw())
 
 # http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette
@@ -56,17 +57,17 @@ trial_obs <- trial_obs %>%
 
 
 
-## ----trial_lme, size = 'tiny'-----------------------------------------------------------------------------------
+## ----trial_lme, size = 'tiny'-------------------------------------------------------------------------------------
 fit_lme <- lme(ADAS11 ~ month + month:active, data = trial_obs, random = ~month|id)
 summary(fit_lme)
 
 
-## ----trial_lme_age, size = 'tiny'-------------------------------------------------------------------------------
+## ----trial_lme_age, size = 'tiny'---------------------------------------------------------------------------------
 fit_lme_cov <- lme(ADAS11 ~ age_c + female + month + month:active, data = trial_obs, random = ~month|id)
 summary(fit_lme_cov)
 
 
-## ----trial_lme_rcode, eval = FALSE, echo = TRUE-----------------------------------------------------------------
+## ----trial_lme_rcode, eval = FALSE, echo = TRUE-------------------------------------------------------------------
 lme(ADAS11 ~ month + month:active, 
   data = trial_obs, random = ~month|id)
 
@@ -74,7 +75,7 @@ lme(ADAS11 ~ age_c + female + month + month:active,
   data = trial_obs, random = ~month|id)
 
 
-## ----trial_lme_profiles, echo = FALSE, size = 'scriptsize'------------------------------------------------------
+## ----trial_lme_profiles, echo = FALSE, size = 'scriptsize'--------------------------------------------------------
 em <- fit_lme_cov %>%
   ref_grid(at = list(
     month = unique(trial_obs$month),
@@ -84,11 +85,11 @@ em <- fit_lme_cov %>%
   as.data.frame()
 
 
-## ----echo = FALSE, size = 'scriptsize'--------------------------------------------------------------------------
+## ----echo = FALSE, size = 'scriptsize'----------------------------------------------------------------------------
 em %>% kable()
 
 
-## ----echo = FALSE, size = 'scriptsize'--------------------------------------------------------------------------
+## ----echo = FALSE, size = 'scriptsize'----------------------------------------------------------------------------
 p <- em %>%
   mutate(group = factor(active, levels = c(0,1), labels = c('Placebo', 'Active'))) %>%
   ggplot(aes(x = month, y = emmean, group = group)) +
@@ -100,7 +101,7 @@ p <- em %>%
 grid.draw(arrangeGrob(p,countTab,heights=c(3,1)))
 
 
-## ----echo = FALSE, size = 'scriptsize'--------------------------------------------------------------------------
+## ----echo = FALSE, size = 'scriptsize'----------------------------------------------------------------------------
 p <- em %>%
   mutate(group = factor(active, levels = c(0,1), labels = c('Placebo', 'Active'))) %>%
   ggplot(aes(x = month, y = emmean, group = group, color=group))+
@@ -113,7 +114,7 @@ p <- em %>%
 grid.draw(arrangeGrob(p,countTab,heights=c(3,1)))
 
 
-## ----varPar, echo=FALSE-----------------------------------------------------------------------------------------
+## ----varPar, echo=FALSE-------------------------------------------------------------------------------------------
 # simulate data with different variance parameters
 varPar <- expand.grid(
   sigma_random_intercept = c(2, 10),
@@ -154,7 +155,7 @@ varPlot <- do.call(rbind, lapply(1:nrow(varPar), function(i){
 }))
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 ggplot(filter(varPlot, sigma_random_intercept==2 & sigma_random_slope==0.2), 
   aes(x=month, y=ADAS11, group=id, color=group)) + 
   geom_line(alpha=0.25) +
@@ -165,7 +166,7 @@ ggplot(filter(varPlot, sigma_random_intercept==2 & sigma_random_slope==0.2),
   theme(legend.position=c(0.1,0.8))
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 ggplot(filter(varPlot, sigma_residual==2 & sigma_random_slope==0.2), 
   aes(x=month, y=ADAS11, group=id, color=group)) + 
   geom_line(alpha=0.25) +
@@ -176,7 +177,7 @@ ggplot(filter(varPlot, sigma_residual==2 & sigma_random_slope==0.2),
   theme(legend.position=c(0.6,0.8))
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 ggplot(filter(varPlot, sigma_residual==2 & sigma_random_intercept==2), 
   aes(x=month, y=ADAS11, group=id, color=group)) + 
   geom_line(alpha=0.25) +
@@ -187,16 +188,16 @@ ggplot(filter(varPlot, sigma_residual==2 & sigma_random_intercept==2),
   theme(legend.position=c(0.1,0.8))
 
 
-## ----trial_lme_apoe_int, size = 'tiny'--------------------------------------------------------------------------
+## ----trial_lme_apoe_int, size = 'tiny'----------------------------------------------------------------------------
 fit_lme_int <- update(fit_lme, random = ~1|id)
 summary(fit_lme_int)
 
 
-## ----trial_lme_apoe_int_vs_slope, size = 'footnotesize', echo = TRUE--------------------------------------------
+## ----trial_lme_apoe_int_vs_slope, size = 'footnotesize', echo = TRUE----------------------------------------------
 anova(fit_lme_int, fit_lme)
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 means <- expand.grid(female=1, age_c=0, month=0:18, active=0, id=1:3) %>%
   filter(id %in% c(1,2) | month %in% months) 
 means <- mutate(means,
@@ -217,7 +218,7 @@ ggplot(means, aes(x=month, y=ADAS11, group=Mean, color=Mean)) +
   theme(legend.position=c(0.15,0.7))
 
 
-## ----varPar2, echo=FALSE----------------------------------------------------------------------------------------
+## ----varPar2, echo=FALSE------------------------------------------------------------------------------------------
 # simulate data with different variance parameters
 varPar <- expand.grid(
   variance = c('homogeneous', 'heterogeneous'),
@@ -260,7 +261,7 @@ varPlot <- do.call(rbind, lapply(1:nrow(varPar), function(i){
 }))
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 ggplot(filter(varPlot, correlation=='correlated'), 
   aes(x=month, y=ADAS11, group=id, color=group)) + 
   geom_line(alpha=0.25) +
@@ -271,7 +272,7 @@ ggplot(filter(varPlot, correlation=='correlated'),
   theme(legend.position=c(0.1,0.8))
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 ggplot(filter(varPlot, variance=='heterogeneous'), 
   aes(x=month, y=ADAS11, group=id, color=group)) + 
   geom_line(alpha=0.25) +
@@ -282,7 +283,7 @@ ggplot(filter(varPlot, variance=='heterogeneous'),
   theme(legend.position='none')
 
 
-## ----echo=FALSE, eval=FALSE-------------------------------------------------------------------------------------
+## ----echo=FALSE, eval=FALSE---------------------------------------------------------------------------------------
 ####################################################
 ### pilot estimates are from a model fit to ADNI ###
 ####################################################
@@ -299,7 +300,7 @@ ggplot(filter(varPlot, variance=='heterogeneous'),
 # summary(fit_adni)
 
 
-## ----echo=TRUE--------------------------------------------------------------------------------------------------
+## ----echo=TRUE----------------------------------------------------------------------------------------------------
 Beta <- c(
    '(Intercept)'= 19.8, # mean ADAS at baseline
         'female'=-0.51, # female perform better
@@ -323,7 +324,7 @@ cc <- matrix(0.75, nrow=4, ncol=4)   # correlation matrix
 diag(cc) <- 1
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 # set seed so that simulation is reproducible
 set.seed(20170714)
 
@@ -380,14 +381,14 @@ trial_mmrm <- right_join(
     visNo = as.numeric(m))
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 trial_mmrm %>% select(-group, -missing, -month, -visNo) %>% 
   select(id, m, m0, m6, m12, m18, everything()) %>%
   head() %>%
   kable()
 
 
-## ----spaghetti_plot---------------------------------------------------------------------------------------------
+## ----spaghetti_plot-----------------------------------------------------------------------------------------------
 ggplot(trial, aes(x=month, y=ADAS11, group=id, color=group)) + 
   geom_line(alpha=0.25) +
   geom_smooth(aes(group = NULL), method = 'loess', size = 2) +
@@ -395,7 +396,7 @@ ggplot(trial, aes(x=month, y=ADAS11, group=id, color=group)) +
   theme(legend.position=c(0.1, 0.85), legend.background = element_rect(fill=NA))
 
 
-## ----echo = TRUE------------------------------------------------------------------------------------------------
+## ----echo = TRUE--------------------------------------------------------------------------------------------------
 # Symmetric correlation, heterogeneous variance
 MMRMsymHet <- gls(ADAS11.ch ~ 
   -1+ADAS11.m0+female+age_c+(m6+m12+m18)+(m6+m12+m18):active,
@@ -409,16 +410,16 @@ MMRMcompSymHet <- gls(ADAS11.ch ~
   weights = varIdent(form = ~ 1 | m) )
 
 
-## ----echo=TRUE, eval=FALSE--------------------------------------------------------------------------------------
+## ----echo=TRUE, eval=FALSE----------------------------------------------------------------------------------------
 summary(MMRMsymHet)
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 x <- summary(MMRMsymHet)
 print(summary(x$modelStruct), sigma = x$sigma)
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 cat('Coefficients:\n')
 xtTab <- as.data.frame(x$tTable)
 printCoefmat(x$tTable, eps=0.001, digits=3)
@@ -430,7 +431,7 @@ cat("Residual standard error:", format(x$sigma),"\n")
 #     "residual\n")
 
 
-## ----echo = TRUE------------------------------------------------------------------------------------------------
+## ----echo = TRUE--------------------------------------------------------------------------------------------------
 # Symmetric correlation, heterogeneous variance
 cLDAsymHet <- gls(ADAS11 ~ 
   -1+female+age_c+m0+(m6+m12+m18)+(m6+m12+m18):active,
@@ -444,12 +445,12 @@ cLDAcompSymHet <- gls(ADAS11 ~
   weights = varIdent(form = ~ 1 | m) )
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 x <- summary(cLDAsymHet)
 print(summary(x$modelStruct), sigma = x$sigma)
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 cat('Coefficients:\n')
 xtTab <- as.data.frame(x$tTable)
 printCoefmat(x$tTable, eps=0.001, digits=3)
@@ -461,7 +462,7 @@ cat("Residual standard error:", format(x$sigma),"\n")
 #     "residual\n")
 
 
-## ----echo = TRUE------------------------------------------------------------------------------------------------
+## ----echo = TRUE--------------------------------------------------------------------------------------------------
 # Linear time
 cLDAlin <- gls(ADAS11 ~ 
   female + age_c + month + month:active,
@@ -475,7 +476,7 @@ cLDAquad <- gls(ADAS11 ~
   weights = varIdent(form = ~ 1 | m))
 
 
-## ----echo = FALSE-----------------------------------------------------------------------------------------------
+## ----echo = FALSE-------------------------------------------------------------------------------------------------
 # Natural cubic spline
 b1 <- function(t){
   as.numeric(predict(splines::ns(trial_obs$month, df=2), t)[,1])
@@ -489,7 +490,7 @@ cLDAncs <- gls(ADAS11 ~
   weights = varIdent(form = ~ 1 | m))
 
 
-## ----echo = FALSE, size = 'scriptsize'--------------------------------------------------------------------------
+## ----echo = FALSE, size = 'scriptsize'----------------------------------------------------------------------------
 plotData0 <- filter(trial_obs, !duplicated(paste(month, active))) %>%
   arrange(active, month) %>%
   mutate(female = 1, age_c=0) %>%
@@ -519,7 +520,7 @@ plotData <- bind_rows(
     mutate(model = 'natural cubic splines'))
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 summaryTable <- trial_obs %>% 
   group_by(group, month) %>%
   summarise(
@@ -541,7 +542,7 @@ ggplot(plotData, aes(x = month, y = Estimate))+
   theme(legend.position='top')
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 contrastData0 <- filter(trial_obs, !duplicated(paste(month, active))) %>%
   arrange(active, month) %>%
   filter(active==1 & month>0) %>%
@@ -564,7 +565,7 @@ rownames(contrastMatrix_quad) <- rownames(contrastMatrix_cat) <-
   rownames(contrastMatrix_ncs) <-paste0('m', months[-1])
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 plotData %>%
   filter(model == 'natural cubic splines') %>%
   ggplot(aes(x = month, y = Estimate))+
@@ -576,7 +577,7 @@ plotData %>%
   theme(legend.position='top')
 
 
-## ----eval=FALSE, echo=TRUE--------------------------------------------------------------------------------------
+## ----eval=FALSE, echo=TRUE----------------------------------------------------------------------------------------
 gls(ADAS11 ~  female + age_c +   # bl covs
     ns(months, df=2) +        # natural spline for placebo (1 knot)
     ns(months, df=2):active + # natural spline for active (1 knot)
@@ -584,7 +585,7 @@ gls(ADAS11 ~  female + age_c +   # bl covs
   weights = varIdent(form = ~ 1 | visNo))     # heterogeneous variance
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 cts <- bind_rows(
   (glht(cLDAsymHet, linfct = as.matrix(contrastMatrix_cat)) %>% confint())$confint %>%
     as.data.frame() %>%
@@ -602,13 +603,13 @@ ggplot(cts, aes(x=month, y=Estimate, color=model)) +
   geom_errorbar(aes(x=month, ymax=upr, ymin=lwr), position=position_dodge(width=2))
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 summary(glht(cLDAsymHet, linfct = as.matrix(contrastMatrix_cat)))
 
 
 
 
-## ---- fig.height=5, fig.width=5*2.2-----------------------------------------------------------------------------
+## ---- fig.height=5, fig.width=5*2.2-------------------------------------------------------------------------------
 options(digits=5)
 
 hippvol <- ADNIMERGE::adnimerge %>%
@@ -619,7 +620,8 @@ hippvol <- ADNIMERGE::adnimerge %>%
   mutate(yrs = Month.bl/12) %>%
   group_by(RID) %>%
   fill(ICV, .direction = "downup") %>%
-  mutate(ICV.bl = first(ICV))
+  mutate(ICV.bl = first(ICV)) %>%
+  na.omit()
 
 ggplot(hippvol, aes(x=yrs, y=Hippocampus, color=SITE, group=RID)) +
   geom_line(alpha=0.5) +
@@ -627,7 +629,7 @@ ggplot(hippvol, aes(x=yrs, y=Hippocampus, color=SITE, group=RID)) +
   scale_colour_hue()
 
 
-## ---- echo=TRUE-------------------------------------------------------------------------------------------------
+## ---- echo=TRUE---------------------------------------------------------------------------------------------------
 hipp_fit <- lme(Hippocampus ~ yrs*DX.bl + AGE + PTGENDER + ICV.bl,
   hippvol, random = ~yrs|RID)
 
@@ -637,7 +639,7 @@ hipp_fit_site <- lme(Hippocampus ~ yrs*DX.bl + AGE + PTGENDER + ICV.bl,
 anova(hipp_fit_site, hipp_fit)
 
 
-## ----size='tiny'------------------------------------------------------------------------------------------------
+## ----size='tiny'--------------------------------------------------------------------------------------------------
 summary(hipp_fit_site)
 
 
@@ -645,7 +647,7 @@ summary(hipp_fit_site)
 
 
 
-## ----results = 'hide', echo = FALSE-----------------------------------------------------------------------------
+## ----results = 'hide', echo = FALSE-------------------------------------------------------------------------------
 # get default predictor matrix
 ini_mi <- mice(trial_wide, maxit = 0, print = FALSE)
 predictorMatrix <- ini_mi$predictorMatrix
@@ -655,28 +657,28 @@ predictorMatrix['ADAS11.m6', 'ADAS11.m12'] <- 0
 predictorMatrix['ADAS11.m6', 'ADAS11.m18'] <- 0
 
 
-## ----results = 'hide', echo = TRUE------------------------------------------------------------------------------
+## ----results = 'hide', echo = TRUE--------------------------------------------------------------------------------
 trial_imp <- mice(trial_wide, predictorMatrix=predictorMatrix, seed = 20170714, maxit=100)
 
 
-## ----echo = TRUE, size = 'scriptsize'---------------------------------------------------------------------------
+## ----echo = TRUE, size = 'scriptsize'-----------------------------------------------------------------------------
 print(head(trial_wide), digits = 2) # raw data with missing values:
 print(head(complete(trial_imp)), digits = 2) # first complete version:
 
 
-## ----echo = FALSE, size = 'scriptsize'--------------------------------------------------------------------------
+## ----echo = FALSE, size = 'scriptsize'----------------------------------------------------------------------------
 fits_mi <- with(data=trial_imp, lm(ADAS11.m18~active*center(ADAS11.m0)))
 summary(fits_mi)
 
 
-## ----echo = FALSE-----------------------------------------------------------------------------------------------
+## ----echo = FALSE-------------------------------------------------------------------------------------------------
 summary(pool(fits_mi)) %>%
   remove_rownames() %>%
   column_to_rownames(var="term") %>%
   printCoefmat()
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 post <- trial_imp$post
 k_tipping <- seq(0.5, 2, 0.25)
 est_tipping <- lapply(k_tipping, function(tip){
@@ -707,24 +709,28 @@ imp_4 <- mice(trial_wide, post=post, predictorMatrix=predictorMatrix, seed = 201
 fit_4 <- with(imp_4, lm(ADAS11.m18~active*center(ADAS11.m0)))
 
 
-## ----echo=FALSE-------------------------------------------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------------------------------------------
 bind_rows(est_tipping) %>%
   printCoefmat(digit=4, eps=0.001)
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 imputed_ids <- subset(trial_wide, is.na(ADAS11.m18))[1:5,]$id
 # filter(trial_wide, id %in% imputed_ids)
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 # Imputation assuming under MAR 
 filter(complete(trial_imp), id %in% imputed_ids) %>%
   select(id, female, age, group, ADAS11.m0, ADAS11.m6, ADAS11.m12, ADAS11.m18)
 
 
-## ---------------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------------------------------------------
 # Imputation under MNAR (k=0.5)
 filter(mice::complete(imp_4), id %in% imputed_ids) %>%
   select(id, female, age, group, ADAS11.m0, ADAS11.m6, ADAS11.m12, ADAS11.m18)
+
+
+## -----------------------------------------------------------------------------------------------------------------
+print(sessionInfo(), locale=FALSE, RNG=FALSE)
 

@@ -2,7 +2,7 @@
 title: Biostatistics for Imaging Biomarkers and Introduction to Longitudinal Data
 output: 
   xaringan::moon_reader:
-    self_contained:  TRUE
+    self_contained:  false
     css: ["default", "default-fonts", "./css/styles.css"]
     seal: false 
     lib_dir: libs
@@ -27,9 +27,9 @@ University of Southern California
 
 ### Biomarkers in Neurodegenerative Disorders
 
-University of Gothenburg
+University College London
 
-May 26, 2021
+May 2022
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 # For ADNIMERGE, go to http://adni.loni.usc.edu/, https://adni.bitbucket.io/
@@ -50,6 +50,7 @@ library(mice)
 
 options(digits=2)
 
+xaringanExtra::use_tile_view() # type 'o' to invoke tile view
 theme_set(theme_bw())
 
 # http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette
@@ -1400,4 +1401,12 @@ PrintBibliography(bib, start=1, end=6)
 
 ```{r echo=FALSE, results="asis", purl=FALSE}
 PrintBibliography(bib, start=7)
+```
+
+---
+
+# Session Info
+
+```{r}
+print(sessionInfo(), locale=FALSE, RNG=FALSE)
 ```

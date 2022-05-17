@@ -2,7 +2,7 @@
 title: Biostatistics for Fluid Biomarkers
 output: 
   xaringan::moon_reader:
-    self_contained:  true
+    self_contained:  false
     css: ["default", "default-fonts", "./css/styles.css"]
     seal: false 
     lib_dir: libs
@@ -27,13 +27,14 @@ University of Southern California
 
 ### Biomarkers in Neurodegenerative Disorders
 
-University of Gothenburg
+University College London
 
-May 26, 2021
+May 2022
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 # devtools::install_url('https://cran.rstudio.com/src/contrib/Archive/calibFit/calibFit_2.1.0.tar.gz')
 # remotes::install_github('atrihub/SRS')
+# remotes::install_github("gadenbuie/xaringanExtra")
 # For ADNIMERGE, go to http://adni.loni.usc.edu/, https://adni.bitbucket.io/
 
 library(knitr)
@@ -46,9 +47,11 @@ library(SRS)
 library(mixtools)
 library(pROC)
 library(party)
+library(MoEClust)
 
 options(digits=2)
 
+xaringanExtra::use_tile_view() # type 'o' to invoke tile view
 theme_set(theme_bw())
 
 # http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette
@@ -82,10 +85,12 @@ knitr::opts_chunk$set(
   message = FALSE, 
   warning = FALSE
 )
+
 # knitr::knit_hooks$set(inline = function(x) {
 #   prettyNum(x, big.mark=",")
 # })
 # purl('fluid.Rmd')
+
 ```
 
 ```{r load_refs, include=FALSE, cache=FALSE, purl=FALSE}
@@ -98,7 +103,8 @@ BibOptions(check.entries = FALSE,
   dashed = FALSE,
   max.names = 1)
 bib <- ReadBib("./references.bib", check = FALSE)
-NoCite(bib, c('calibFit', 'davidian1990', 'Youden', 'pROC', 'ctree', 'breiman2001', 'hothorn2006', 'mixtools'))
+NoCite(bib, c('calibFit', 'davidian1990', 'Youden', 'pROC', 'ctree', 'breiman2001', 'hothorn2006', 'mixtools',
+  'murphy2020gaussian'))
 # Citet(), Citep(), AutoCite()
 ```
 
@@ -126,15 +132,15 @@ knitr::include_graphics("./images/actc_logo.png")
 .large[
 Topics:
 
-- 9:00 - 9:50 -- Biostatistics for Fluid Biomarkers
-- 10:00 - 10:50 -- Biostatistics for Imaging Biomarkers
-- 11:00 - 11:50 -- Modeling Longitudinal Data
+- Hour 1 -- Biostatistics for Fluid Biomarkers
+- Hour 2 -- Biostatistics for Imaging Biomarkers
+- Hour 3 -- Modeling Longitudinal Data
 
 Emphases:
 
 - Visualization 
 - Demonstrations using R, code available from:
-  - [https://github.com/atrihub/biomarkers-neuro-disorders-2021](https://github.com/atrihub/biomarkers-neuro-disorders-2021)
+  - [https://github.com/atrihub/biomarkers-neuro-disorders-2022](https://github.com/atrihub/biomarkers-neuro-disorders-2022)
 ]
 
 ---
@@ -152,6 +158,7 @@ Emphases:
 - Mixture Modeling (Unsupervised Learning)
   - Univariate
   - Bivariate
+- Mixture of Experts (Unsupervised Learning with covariates)
 ]
 
 ---
@@ -284,8 +291,8 @@ One way to ensure this, is to randomize samples to batches
 .large[
 - Randomize samples to batches/plates
 - Longitudinally collected samples (samples collected over time on same individual):
-  - If batch effects are expected to be larger than storage effects, consider randomizing *individuals* to batches
-  - (Keep all samples from individual on the same plate)
+  - If batch effects are expected to be larger than storage effects, consider randomizing *individuals* to batches (i.e. keep all samples from individual on the same plate)
+  - However, if storage effects are a concern, 
 - Randomization can be stratified to ensure important factors (e.g. treatment group, age, APOE $\epsilon4$) are balanced
 ]
 
@@ -494,7 +501,7 @@ grid.arrange(p1,p2,nrow=1)
 
 ---
 
-# Residuals (Response - Fitted values)
+# Residuals (difference between response & fitted values)
 
 ```{r calibFit_residuals, out.width='100%', fig.height=4, fig.width=4*(2)}
 p1 <- ggplot(HPLC, aes(x=Concentration, y=Response-Fitted)) +
@@ -1179,7 +1186,7 @@ mixmdl <- normalmixEM(subset(dd, DX!='MCI' & ABETA<1700)$ABETA, k = 2)
 
 set.seed(1)
 mvmixmdl <- mvnormalmixEM(subset(dd, DX!='MCI' & ABETA<1700)[, c('ABETA', 'TAU')], k = 2)
-## number of iterations= 85
+## number of iterations= 91
 ```
 
 ```{r mixture_distribution_Abeta}
@@ -1286,6 +1293,40 @@ line on the left is still Youden's cutoff for the ratio
 
 Contours are confidence ellipses at 99%, 95%, and 90% just to help see the shape of the estimated distributions
 
+---
+
+# Mixture of Experts (unsupervised learning with covariates)
+
+```{r echo=FALSE, fig.align='center', out.width='60%'}
+knitr::include_graphics("./images/moe.png")
+```
+
+`r Citet(bib, c('murphy2020gaussian', 'MoEClust'))`
+
+---
+
+# Mixture of Experts (unsupervised learning with covariates)
+
+```{r fig.height=5.9, fig.width=13}
+moedata <- dd %>%
+  filter(DX!='MCI' & ABETA<1700) %>% 
+  select(AGE, APOE4, ABETA, TAU, ADAS13) %>%
+  mutate(APOE4 = as.factor(APOE4)) %>%
+  na.omit()
+
+moe23 <- MoE_clust(
+  moedata %>% select(ABETA, TAU, ADAS13),
+  G = 2:4,
+  gating = ~ APOE4,
+  expert = ~ AGE,
+  network.data = moedata
+)
+
+plot(moe23, what="gpairs", jitter=TRUE)
+# with(moedata, plot(moe23, what="gating", x.axis=APOE4, xlab="APOE4"))
+```
+
+MAP = maximum a posteriori classification
 
 ---
 
@@ -1302,13 +1343,14 @@ Contours are confidence ellipses at 99%, 95%, and 90% just to help see the shape
 - Mixture Modeling (Unsupervised Learning)
   - Univariate
   - Bivariate
+  - With covariates (Mixture of Experts)
 ]
 
 ---
 
-# References
+# References (1/2)
 
-```{r refs, echo=FALSE, results="asis", purl = FALSE}
+```{r refs, echo=FALSE, results="asis", purl=FALSE}
 BibOptions(check.entries = FALSE,
   bib.style = "authoryear",
   cite.style = "authoryear",
@@ -1316,5 +1358,21 @@ BibOptions(check.entries = FALSE,
   hyperlink = FALSE,
   dashed = FALSE,
   max.names = 10)
-PrintBibliography(bib)
+PrintBibliography(bib, start=1, end=7)
+```
+
+---
+
+# References (2/2)
+
+```{r echo=FALSE, results="asis", purl=FALSE}
+PrintBibliography(bib, start=8)
+```
+
+---
+
+# Session Info
+
+```{r}
+print(sessionInfo(), locale=FALSE, RNG=FALSE)
 ```

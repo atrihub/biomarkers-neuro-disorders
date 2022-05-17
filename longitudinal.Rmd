@@ -2,7 +2,7 @@
 title: Biostatistics for Longitudinal Data
 output: 
   xaringan::moon_reader:
-    self_contained:  true
+    self_contained:  false
     css: ["default", "default-fonts", "./css/styles.css"]
     seal: false 
     lib_dir: libs
@@ -27,9 +27,9 @@ University of Southern California
 
 ### Biomarkers in Neurodegenerative Disorders
 
-University of Gothenburg
+University College London
 
-May 26, 2021
+May 2022
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 # For ADNIMERGE, go to http://adni.loni.usc.edu/, https://adni.bitbucket.io/
@@ -51,6 +51,7 @@ library(tidyverse)
 
 options(digits=3)
 
+xaringanExtra::use_tile_view() # type 'o' to invoke tile view
 theme_set(theme_bw())
 
 # http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette
@@ -384,7 +385,7 @@ class: inverse, middle, center
 
 .large[
 
-* Last session we discussed a linear mixed effect model (LME) which treats time as a continuous variable
+* We have discussed linear mixed effect models (LMEs) which treats time as a continuous variable
 * This is one type of longitudinal model among many types
 * Three key features of longitudinal models:
   * **Mean structure**: Governs shape of mean trajectory
@@ -453,7 +454,8 @@ class: inverse, middle, center
 # Mixed Model of Repeated Measures (MMRM)
 
 .large[
-* A popular _marginal model_, "Mixed Model of Repeated Measures" (MMRM), makes no (or very general) assumptions about the mean and variance/covariance structure.
+* A popular model for clinical trials
+* Makes no (or very general) assumptions about the mean and variance/covariance structure.
 * **Unstructured mean:** time is treated as categorical, so no linear (or quadratic, etc.) trend is assumed
 * **Unstructured variance/covariance:** includes parameters for variance at each visit ("heterogeneous") and visit-to-visit correlation
 * A repeated measures extension of ANCOVA (instead of one post-baseline assessment, there are several)
@@ -1156,7 +1158,8 @@ hippvol <- ADNIMERGE::adnimerge %>%
   mutate(yrs = Month.bl/12) %>%
   group_by(RID) %>%
   fill(ICV, .direction = "downup") %>%
-  mutate(ICV.bl = first(ICV))
+  mutate(ICV.bl = first(ICV)) %>%
+  na.omit()
 
 ggplot(hippvol, aes(x=yrs, y=Hippocampus, color=SITE, group=RID)) +
   geom_line(alpha=0.5) +
@@ -1476,3 +1479,11 @@ filter(mice::complete(imp_4), id %in% imputed_ids) %>%
 ```
 
 Imputed ADAS11.m18 values are only changed for those in active group
+
+---
+
+# Session Info
+
+```{r}
+print(sessionInfo(), locale=FALSE, RNG=FALSE)
+```
