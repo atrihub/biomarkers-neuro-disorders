@@ -25,11 +25,11 @@ Michael Donohue, PhD
 
 University of Southern California
 
-### Biomarkers in Neurodegenerative Disorders
+### Biomarkers for Neurodegenerative Disorders
 
-University College London
+BarcelonaBeta Brain Research Center
 
-May 2022
+May 2023
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 # devtools::install_url('https://cran.rstudio.com/src/contrib/Archive/calibFit/calibFit_2.1.0.tar.gz')
@@ -140,7 +140,7 @@ Emphases:
 
 - Visualization 
 - Demonstrations using R, code available from:
-  - [https://github.com/atrihub/biomarkers-neuro-disorders-2022](https://github.com/atrihub/biomarkers-neuro-disorders-2022)
+  - [https://github.com/atrihub/biomarkers-neuro-disorders](https://github.com/atrihub/biomarkers-neuro-disorders)
 ]
 
 ---

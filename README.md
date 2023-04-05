@@ -1,6 +1,6 @@
-# biomarkers-neuro-disorders-2022
+# biomarkers-neuro-disorders
 
-This repository hosts the course materials for the biostatistics module of the [Biomarkers in Neurodegenerative Disorders](https://www.ucl.ac.uk/ion/events/2022/may/biomarkers-neurodegenerative-diseases-16th-20th-may-2022#:~:text=The%20Biomarkers%20for%20neurodegenerative%20diseases,Queen%20Square%20institute%20of%20Neurology) course at University College London, May 16 to 20, 2022.
+This repository hosts the course materials for the biostatistics module of the [Biomarkers in Neurodegenerative Disorders](https://www.barcelonabeta.org/en/community/events/6th-workshop-biomarkers-neurodegenerative-diseases) course at BarcelonaBeta Brain Research Center, May 15 to 19, 2023.
 
 Statistical and visualization techniques will be demonstrated using [R](https://www.r-project.org/) applied to data from the [Alzheimer's Disease Neuroimaging Initiative (ADNI)](http://adni.loni.usc.edu/). If you would like to execute the R code on your own machine, you should [apply for access](http://adni.loni.usc.edu/data-samples/access-data/) to ADNI and [download and install the ADNIMERGE R package](https://adni.loni.usc.edu/wp-content/uploads/2012/08/instruction-ADNIMERGE-packages.pdf).
 
