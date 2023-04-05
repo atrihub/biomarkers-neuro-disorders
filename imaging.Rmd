@@ -25,11 +25,11 @@ Michael Donohue, PhD
 
 University of Southern California
 
-### Biomarkers in Neurodegenerative Disorders
+### Biomarkers for Neurodegenerative Disorders
 
-University College London
+BarcelonaBeta Brain Research Center
 
-May 2022
+May 2023
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 # For ADNIMERGE, go to http://adni.loni.usc.edu/, https://adni.bitbucket.io/
@@ -95,10 +95,12 @@ knitr::opts_chunk$set(
   message = FALSE, 
   warning = FALSE
 )
+
 # knitr::knit_hooks$set(inline = function(x) {
 #   prettyNum(x, big.mark=",")
 # })
 # purl('imaging.Rmd')
+
 ```
 
 ```{r load_refs, include=FALSE, cache=FALSE, purl=FALSE}

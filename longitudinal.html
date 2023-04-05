@@ -22,11 +22,11 @@ Michael Donohue, PhD
 
 University of Southern California
 
-### Biomarkers in Neurodegenerative Disorders
+### Biomarkers for Neurodegenerative Disorders
 
-University College London
+BarcelonaBeta Brain Research Center
 
-May 2022
+May 2023
 
 
   
@@ -1068,8 +1068,8 @@ hipp_fit_site &lt;- lme(Hippocampus ~ yrs*DX.bl + AGE + PTGENDER + ICV.bl,
 
 anova(hipp_fit_site, hipp_fit)
               Model df   AIC   BIC logLik   Test L.Ratio p-value
-hipp_fit_site     1 20 95042 95178 -47501                       
-hipp_fit          2 17 95056 95172 -47511 1 vs 2  20.216   2e-04
+hipp_fit_site     1 20 95002 95138 -47481                       
+hipp_fit          2 17 95016 95132 -47491 1 vs 2  20.027   2e-04
 ```
 
 ---
@@ -1081,40 +1081,40 @@ hipp_fit          2 17 95056 95172 -47511 1 vs 2  20.216   2e-04
 Linear mixed-effects model fit by REML
   Data: hippvol 
     AIC   BIC logLik
-  95042 95178 -47501
+  95002 95138 -47481
 
 Random effects:
  Formula: ~yrs | SITE
  Structure: General positive-definite, Log-Cholesky parametrization
             StdDev  Corr  
-(Intercept) 150.701 (Intr)
-yrs          18.985 -0.319
+(Intercept) 150.483 (Intr)
+yrs          18.933 -0.309
 
  Formula: ~yrs | RID %in% SITE
  Structure: General positive-definite, Log-Cholesky parametrization
             StdDev  Corr  
-(Intercept) 845.909 (Intr)
-yrs          89.345 0.28  
-Residual    172.693       
+(Intercept) 845.958 (Intr)
+yrs          89.349 0.28  
+Residual    172.712       
 
 Fixed effects:  Hippocampus ~ yrs * DX.bl + AGE + PTGENDER + ICV.bl 
                 Value Std.Error   DF  t-value p-value
-(Intercept)    9192.3    330.67 4901  27.7987  0.0000
-yrs             -96.2      6.55 4901 -14.6775  0.0000
-DX.blSMC        162.8     95.69 1603   1.7012  0.0891
-DX.blEMCI      -242.1     67.03 1603  -3.6123  0.0003
-DX.blLMCI     -1039.0     57.13 1603 -18.1872  0.0000
-DX.blAD       -1618.1     65.06 1603 -24.8727  0.0000
-AGE             -59.3      3.04 1603 -19.4773  0.0000
-PTGENDERMale    185.0     52.65 1603   3.5134  0.0005
-ICV.bl            0.0      0.00 1603  10.4404  0.0000
-yrs:DX.blSMC    -15.1     17.63 4901  -0.8586  0.3906
-yrs:DX.blEMCI   -23.7      9.77 4901  -2.4290  0.0152
-yrs:DX.blLMCI   -81.4      8.38 4901  -9.7138  0.0000
-yrs:DX.blAD    -124.7     14.01 4901  -8.8969  0.0000
+(Intercept)    9193.2    330.70 4898  27.7991  0.0000
+yrs             -96.2      6.55 4898 -14.6791  0.0000
+DX.blSMC        162.8     95.70 1603   1.7014  0.0891
+DX.blEMCI      -242.4     67.04 1603  -3.6153  0.0003
+DX.blLMCI     -1039.1     57.13 1603 -18.1877  0.0000
+DX.blAD       -1618.0     65.06 1603 -24.8695  0.0000
+AGE             -59.3      3.04 1603 -19.4778  0.0000
+PTGENDERMale    184.9     52.66 1603   3.5110  0.0005
+ICV.bl            0.0      0.00 1603  10.4377  0.0000
+yrs:DX.blSMC    -15.1     17.63 4898  -0.8587  0.3905
+yrs:DX.blEMCI   -23.7      9.78 4898  -2.4248  0.0154
+yrs:DX.blLMCI   -81.2      8.38 4898  -9.6911  0.0000
+yrs:DX.blAD    -124.7     14.01 4898  -8.8979  0.0000
  Correlation: 
               (Intr) yrs    DX.SMC DX.EMC DX.LMC DX.bAD AGE    PTGEND ICV.bl
-yrs            0.010                                                        
+yrs            0.011                                                        
 DX.blSMC      -0.122 -0.056                                                 
 DX.blEMCI     -0.221 -0.081  0.296                                          
 DX.blLMCI     -0.085 -0.096  0.337  0.485                                   
@@ -1123,8 +1123,8 @@ AGE           -0.719  0.000  0.080  0.157  0.057  0.003
 PTGENDERMale   0.428  0.003  0.024 -0.069 -0.034 -0.018 -0.131              
 ICV.bl        -0.718 -0.002  0.011  0.050 -0.065 -0.013  0.058 -0.578       
 yrs:DX.blSMC  -0.006 -0.317  0.063  0.029  0.035  0.031 -0.001 -0.004  0.001
-yrs:DX.blEMCI -0.011 -0.569  0.037  0.116  0.064  0.056 -0.003 -0.002  0.003
-yrs:DX.blLMCI -0.006 -0.660  0.042  0.062  0.119  0.065 -0.010 -0.003  0.001
+yrs:DX.blEMCI -0.011 -0.569  0.037  0.116  0.063  0.056 -0.003 -0.002  0.003
+yrs:DX.blLMCI -0.006 -0.660  0.042  0.061  0.119  0.065 -0.010 -0.003  0.001
 yrs:DX.blAD   -0.009 -0.395  0.026  0.039  0.044  0.037 -0.002 -0.002  0.003
               y:DX.S y:DX.E y:DX.L
 yrs                               
@@ -1142,9 +1142,9 @@ yrs:DX.blAD    0.148  0.261  0.310
 
 Standardized Within-Group Residuals:
        Min         Q1        Med         Q3        Max 
--8.0205290 -0.4524447 -0.0034325  0.4488879  6.6839464 
+-8.0196353 -0.4524607 -0.0033189  0.4488820  6.6832720 
 
-Number of Observations: 6578
+Number of Observations: 6575
 Number of Groups: 
          SITE RID %in% SITE 
            62          1672 
@@ -1484,9 +1484,9 @@ Imputed ADAS11.m18 values are only changed for those in active group
 
 
 ```
-R version 4.2.0 (2022-04-22)
+R version 4.2.1 (2022-06-23)
 Platform: x86_64-apple-darwin17.0 (64-bit)
-Running under: macOS Big Sur/Monterey 10.16
+Running under: macOS Big Sur ... 10.16
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
@@ -1500,41 +1500,42 @@ other attached packages:
  [1] RefManageR_1.3.0 forcats_0.5.1    stringr_1.4.0    dplyr_1.0.9     
  [5] purrr_0.3.4      readr_2.1.2      tidyr_1.2.0      tibble_3.1.7    
  [9] tidyverse_1.3.1  mice_3.14.0      arsenal_3.6.3    multcomp_1.4-19 
-[13] TH.data_1.1-1    MASS_7.3-56      mvtnorm_1.1-3    emmeans_1.7.3   
+[13] TH.data_1.1-1    MASS_7.3-57      mvtnorm_1.1-3    emmeans_1.7.3   
 [17] nlme_3.1-157     plotly_4.10.0    gridExtra_2.3    kableExtra_1.3.4
 [21] knitr_1.39       Hmisc_4.7-0      ggplot2_3.3.6    Formula_1.2-4   
 [25] survival_3.3-1   lattice_0.20-45 
 
 loaded via a namespace (and not attached):
  [1] fs_1.5.2            lubridate_1.8.0     webshot_0.5.3      
- [4] RColorBrewer_1.1-3  httr_1.4.3          tools_4.2.0        
+ [4] RColorBrewer_1.1-3  httr_1.4.3          tools_4.2.1        
  [7] backports_1.4.1     bslib_0.3.1         utf8_1.2.2         
-[10] R6_2.5.1            rpart_4.1.16        DBI_1.1.2          
-[13] lazyeval_0.2.2      colorspace_2.0-3    nnet_7.3-17        
-[16] withr_2.5.0         tidyselect_1.1.2    compiler_4.2.0     
-[19] cli_3.3.0           rvest_1.0.2         htmlTable_2.4.0    
-[22] xml2_1.3.3          sandwich_3.0-1      labeling_0.4.2     
-[25] sass_0.4.1          scales_1.2.0        checkmate_2.1.0    
-[28] systemfonts_1.0.4   digest_0.6.29       foreign_0.8-82     
-[31] rmarkdown_2.14      svglite_2.1.0       base64enc_0.1-3    
-[34] jpeg_0.1-9          pkgconfig_2.0.3     htmltools_0.5.2    
-[37] bibtex_0.4.2.3      highr_0.9           dbplyr_2.1.1       
-[40] fastmap_1.1.0       readxl_1.4.0        htmlwidgets_1.5.4  
-[43] rlang_1.0.2         rstudioapi_0.13     xaringan_0.24      
-[46] farver_2.1.0        jquerylib_0.1.4     generics_0.1.2     
-[49] zoo_1.8-10          jsonlite_1.8.0      magrittr_2.0.3     
-[52] Matrix_1.4-1        Rcpp_1.0.8.3        munsell_0.5.0      
-[55] fansi_1.0.3         lifecycle_1.0.1     stringi_1.7.6      
-[58] yaml_2.3.5          plyr_1.8.7          crayon_1.5.1       
-[61] haven_2.5.0         splines_4.2.0       hms_1.1.1          
-[64] pillar_1.7.0        estimability_1.3    codetools_0.2-18   
-[67] reprex_2.0.1        glue_1.6.2          evaluate_0.15      
-[70] latticeExtra_0.6-29 modelr_0.1.8        data.table_1.14.2  
-[73] tzdb_0.3.0          png_0.1-7           vctrs_0.4.1        
-[76] cellranger_1.1.0    gtable_0.3.0        assertthat_0.2.1   
-[79] xfun_0.31           xtable_1.8-4        broom_0.8.0        
-[82] coda_0.19-4         viridisLite_0.4.0   ADNIMERGE_0.0.1    
-[85] cluster_2.1.3       ellipsis_0.3.2      xaringanExtra_0.5.5
+[10] R6_2.5.1            rpart_4.1.16        mgcv_1.8-40        
+[13] DBI_1.1.2           lazyeval_0.2.2      colorspace_2.0-3   
+[16] nnet_7.3-17         withr_2.5.0         tidyselect_1.1.2   
+[19] compiler_4.2.1      cli_3.3.0           rvest_1.0.2        
+[22] htmlTable_2.4.0     xml2_1.3.3          sandwich_3.0-1     
+[25] labeling_0.4.2      sass_0.4.1          scales_1.2.0       
+[28] checkmate_2.1.0     systemfonts_1.0.4   digest_0.6.29      
+[31] foreign_0.8-82      rmarkdown_2.14      svglite_2.1.0      
+[34] base64enc_0.1-3     jpeg_0.1-9          pkgconfig_2.0.3    
+[37] htmltools_0.5.2     bibtex_0.4.2.3      highr_0.9          
+[40] dbplyr_2.1.1        fastmap_1.1.0       readxl_1.4.0       
+[43] htmlwidgets_1.5.4   rlang_1.0.4         rstudioapi_0.13    
+[46] xaringan_0.24       farver_2.1.1        jquerylib_0.1.4    
+[49] generics_0.1.2      zoo_1.8-10          jsonlite_1.8.0     
+[52] magrittr_2.0.3      Matrix_1.4-1        Rcpp_1.0.9         
+[55] munsell_0.5.0       fansi_1.0.3         lifecycle_1.0.1    
+[58] stringi_1.7.6       yaml_2.3.5          plyr_1.8.7         
+[61] crayon_1.5.1        haven_2.5.0         splines_4.2.1      
+[64] hms_1.1.1           pillar_1.8.0        estimability_1.3   
+[67] codetools_0.2-18    reprex_2.0.1        glue_1.6.2         
+[70] evaluate_0.15       latticeExtra_0.6-29 modelr_0.1.8       
+[73] data.table_1.14.2   tzdb_0.3.0          png_0.1-7          
+[76] vctrs_0.4.1         cellranger_1.1.0    gtable_0.3.0       
+[79] assertthat_0.2.1    xfun_0.31           xtable_1.8-4       
+[82] broom_0.8.0         coda_0.19-4         viridisLite_0.4.0  
+[85] ADNIMERGE_0.0.1     cluster_2.1.3       ellipsis_0.3.2     
+[88] xaringanExtra_0.5.5
 ```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

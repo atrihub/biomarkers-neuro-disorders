@@ -1,4 +1,4 @@
-## ----setup, echo=FALSE, message=FALSE, warning=FALSE--------------------------------------------------------------
+## ----setup, echo=FALSE, message=FALSE, warning=FALSE------------------------------
 # For ADNIMERGE, go to http://adni.loni.usc.edu/, https://adni.bitbucket.io/
 
 library(Hmisc)
@@ -54,16 +54,16 @@ center <- function(x) scale(x, scale = FALSE)
 
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 dd2 <- subset(ADNIMERGE::adnimerge, VISCODE=='bl' & !is.na(Hippocampus) & DX=='CN') %>%
   mutate(APOEe4 = ifelse(APOE4>0, 1, 0))
 
 
-## ---- echo=TRUE---------------------------------------------------------------------------------------------------
+## ---- echo=TRUE-------------------------------------------------------------------
 lm_fit1_gender <- lm(I(Hippocampus/ICV*100) ~ PTGENDER, data=dd2)
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 summary(lm_fit1_gender)$coef %>%
   as_tibble(rownames = NA) %>% 
   rownames_to_column(var='Coefficient') %>%
@@ -71,11 +71,11 @@ summary(lm_fit1_gender)$coef %>%
   kable()
 
 
-## ---- echo=TRUE---------------------------------------------------------------------------------------------------
+## ---- echo=TRUE-------------------------------------------------------------------
 lm_fit2_gender <- lm(Hippocampus ~ ICV + PTGENDER, data=dd2)
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 summary(lm_fit2_gender)$coef %>%
   as_tibble(rownames = NA) %>% 
   rownames_to_column(var='Coefficient') %>%
@@ -83,7 +83,7 @@ summary(lm_fit2_gender)$coef %>%
   kable()
 
 
-## ----hipp_gender_scatter, fig.height=4, fig.width=6---------------------------------------------------------------
+## ----hipp_gender_scatter, fig.height=4, fig.width=6-------------------------------
 ggplot(dd2, aes(y=Hippocampus, x=ICV, color=PTGENDER)) +
   geom_point(alpha=0.5) +
   geom_smooth(method='lm') +
@@ -92,7 +92,7 @@ ggplot(dd2, aes(y=Hippocampus, x=ICV, color=PTGENDER)) +
   theme(legend.position = c(0.2, 0.8))
 
 
-## ----hipp_gender_box, fig.height=4, fig.width=4*2-----------------------------------------------------------------
+## ----hipp_gender_box, fig.height=4, fig.width=4*2---------------------------------
 p1 <- ggplot(dd2, aes(y=Hippocampus, x=PTGENDER)) +
   geom_boxplot(outlier.shape=NA) +
   geom_dotplot(binaxis='y', stackdir='center', 
@@ -121,7 +121,7 @@ p4 <- ggplot(dd2,
 grid.arrange(p1,p2,p3,p4, nrow=1)
 
 
-## ----hipp_adj_gender_scatter, fig.height=4, fig.width=6-----------------------------------------------------------
+## ----hipp_adj_gender_scatter, fig.height=4, fig.width=6---------------------------
 ggplot(dd2, 
   aes(y=Hippocampus-ICV*coef(lm_fit2_gender)['ICV'], x=ICV, color=PTGENDER)) +
   geom_point(alpha=0.5) +
@@ -131,7 +131,7 @@ ggplot(dd2,
   theme(legend.position = c(0.2, 0.8))
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 ggplot() + 
   geom_segment(aes(x=1.009, y=0, xend=2.076, yend=100),
     arrow = arrow(length = unit(0.03, "npc"), ends='both')) +
@@ -148,7 +148,7 @@ ggplot() +
 
 
 
-## ----echo=FALSE---------------------------------------------------------------------------------------------------
+## ----echo=FALSE-------------------------------------------------------------------
 pibids <- unique(subset(ADNIMERGE::adnimerge, !is.na(PIB))$RID)
 av45ids <- unique(subset(ADNIMERGE::adnimerge, !is.na(AV45))$RID)
 set.seed(20210506)
@@ -173,7 +173,7 @@ ggplot(dd, aes(x=SUVR)) +
   facet_grid(.~Tracer, scales='free_x')
 
 
-## ---- echo=FALSE--------------------------------------------------------------------------------------------------
+## ---- echo=FALSE------------------------------------------------------------------
 t1 <- with(dd, table(DX, Tracer))
 t2 <- round(with(dd, prop.table(table(DX, Tracer), margin = 2))*100, 1)
 tt <- t1
@@ -182,12 +182,12 @@ tt[,2] <- paste(t1[,2], paste0("(", t2[,2], "%)"))
 kable(tt)
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 invproptab <- 1/with(dd, prop.table(table(DX, Tracer), margin = 2))
 kable(invproptab)
 
 
-## ---- echo=TRUE---------------------------------------------------------------------------------------------------
+## ---- echo=TRUE-------------------------------------------------------------------
 # Record the sampling adjustment weights in the data
 dd <- dd %>% mutate(
   wt = case_when(
@@ -200,7 +200,7 @@ dd <- dd %>% mutate(
   ))
 
 
-## ---- echo=TRUE---------------------------------------------------------------------------------------------------
+## ---- echo=TRUE-------------------------------------------------------------------
 # Create adjusted ECDF functions (mapping SUVRs to Cumulative Probabilities)
 # Hmisc::wtd.Ecdf returns a data.frame evaluating the ECDF at each observed value
 PiB.ecdf.data <- with(subset(dd, Tracer == 'PiB'), 
@@ -225,7 +225,7 @@ PiB.inv.ecdf <- approxfun(Probs, PiB.inv.ecdf.data, rule=2)
 Fbp.inv.ecdf <- approxfun(Probs, Fbp.inv.ecdf.data, rule=2)
 
 
-## ---- echo=TRUE---------------------------------------------------------------------------------------------------
+## ---- echo=TRUE-------------------------------------------------------------------
 dd <- dd %>% mutate(
   `Adjusted cumulative probability` = case_when( # 
     Tracer == 'PiB' ~ PiB.ecdf(SUVR),
@@ -240,7 +240,7 @@ dd <- dd %>% mutate(
   arrange(Tracer, SUVR)
 
 
-## ----weighted-ecdfs-----------------------------------------------------------------------------------------------
+## ----weighted-ecdfs---------------------------------------------------------------
 ggplot(dd, aes(x=SUVR)) +
   stat_ecdf(geom = "step") +
   facet_grid(.~Tracer, scales='free_x') +
@@ -248,14 +248,14 @@ ggplot(dd, aes(x=SUVR)) +
   ylab('Cumulative Probability')
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 dd %>% filter(Tracer == 'PiB') %>%
   ggplot(aes(x=CL, y=`Adjusted cumulative probability`)) +
   geom_line() +
   geom_point()
 
 
-## ----pib-densities------------------------------------------------------------------------------------------------
+## ----pib-densities----------------------------------------------------------------
 dd %>% select(RID, DX, Tracer, SUVR, `Florbetapir to PiB adjusted SUVR`) %>%
   pivot_longer(c('SUVR', 'Florbetapir to PiB adjusted SUVR'), 
     names_to = 'Source', values_to = 'SUVR') %>%
@@ -267,7 +267,7 @@ ggplot(aes(x=SUVR, color=Source)) +
   geom_density(alpha=0.5)
 
 
-## ----pib-densities-dx---------------------------------------------------------------------------------------------
+## ----pib-densities-dx-------------------------------------------------------------
 dd %>% select(RID, DX, Tracer, SUVR, `Florbetapir to PiB adjusted SUVR`) %>%
   pivot_longer(c('SUVR', 'Florbetapir to PiB adjusted SUVR'), 
     names_to = 'Source', values_to = 'SUVR') %>%
@@ -280,7 +280,7 @@ ggplot(aes(x=SUVR, color=Source)) +
   facet_grid(.~DX)
 
 
-## ----z-score-densities--------------------------------------------------------------------------------------------
+## ----z-score-densities------------------------------------------------------------
 ggplot() +
   geom_rug(data = subset(dd, Tracer == 'Florbetapir'), 
     aes(x=`Adjusted Z-score`, color = Tracer), alpha=0.5) +
@@ -293,7 +293,7 @@ ggplot() +
 
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 dd.validate <- full_join(
   ADNIMERGE::adnimerge %>% 
     arrange(RID, EXAMDATE) %>% 
@@ -349,7 +349,7 @@ ggplot(fbb2pib_navitsky, aes(x=PiB, y=`Estimated PiB SUVR`)) +
   geom_vline(xintercept = 1.5, linetype='dashed')
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 pib2fbb_navitsky <- dd.validate %>%
   select(RID, `Years between scans`, Florbetapir, 
     `Navitsky et al linear map of PiB to Florbetapir`,
@@ -375,7 +375,7 @@ ggplot(pib2fbb_navitsky, aes(x=Florbetapir, y=`Estimated Florbetapir SUVR`)) +
   geom_vline(xintercept = 1.11, linetype='dashed')
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 fbb2pib_royse <- dd.validate %>%
   select(RID, `Years between scans`, PiB, 
     `Royse et al linear map of Florbetapir to PiB`,
@@ -401,7 +401,7 @@ ggplot(fbb2pib_royse, aes(x=PiB, y=`Estimated PiB SUVR`)) +
   geom_vline(xintercept = 1.5, linetype='dashed')
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 pib2fbb_royse <- dd.validate %>%
   select(RID, `Years between scans`, Florbetapir, 
     `Royse et al linear map of PiB to Florbetapir`,
@@ -431,14 +431,14 @@ ggplot(pib2fbb_royse, aes(x=Florbetapir, y=`Estimated Florbetapir SUVR`)) +
 
 
 
-## ----echo=FALSE---------------------------------------------------------------------------------------------------
+## ----echo=FALSE-------------------------------------------------------------------
 fit_adni <- lme(ADAS11 ~ PTGENDER + center(AGE) + I(Years.bl*12), 
   data=ADNIMERGE::adnimerge,
   random=~M|RID, subset = M<=24 & DX.bl=='AD', na.action=na.omit)
 summary(fit_adni)
 
 
-## ----generate_data1, echo=TRUE------------------------------------------------------------------------------------
+## ----generate_data1, echo=TRUE----------------------------------------------------
 # fixed effects parameters estimated from ADNI
 Beta <- c(
    '(Intercept)'=20 , # mean ADAS at baseline
@@ -458,7 +458,7 @@ n <- 200 # per group
 attrition_rate <- 0.40/18 # approx per month
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 # set seed so that simulation is reproducible
 set.seed(20170701)
 
@@ -510,18 +510,18 @@ trial_mmrm <- right_join(
   mutate(ADAS11.ch = ADAS11 - ADAS11.m0)
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 head(select(trial_obs, -group, -missing)) %>% kable()
 
 
-## ----results='asis'-----------------------------------------------------------------------------------------------
+## ----results='asis'---------------------------------------------------------------
 tab <- tableby(group ~ Female + age + ADAS11, 
   data = subset(trial_obs, month == 0))
 
 summary(tab, text=TRUE) %>% kable()
 
 
-## ----spaghetti_plot-----------------------------------------------------------------------------------------------
+## ----spaghetti_plot---------------------------------------------------------------
 ggplot(trial_obs, aes(x=month, y=ADAS11, group=id, color=group)) + 
   geom_line(alpha=0.25) +
   geom_smooth(aes(group = NULL), method = 'lm', size = 2) +
@@ -529,7 +529,7 @@ ggplot(trial_obs, aes(x=month, y=ADAS11, group=id, color=group)) +
   theme(legend.position=c(0.1, 0.85), legend.background = element_rect(fill=NA))
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 summaryTable <- trial_obs %>% 
   group_by(group, month) %>%
   summarise(
@@ -543,7 +543,7 @@ summaryTable <- trial_obs %>%
 as.data.frame(summaryTable) %>% kable() %>% collapse_rows(1)
 
 
-## ----meanplot-----------------------------------------------------------------------------------------------------
+## ----meanplot---------------------------------------------------------------------
 p <- ggplot(summaryTable, aes(x=month, y=mean, color=group)) +
   geom_line() +
   geom_errorbar(aes(min=lower95, max=upper95), position=position_dodge(0.2), width=0) +
@@ -554,7 +554,7 @@ countTab <- ggplot(summaryTable, aes(x=month, y=group, label=n)) + geom_text() +
 grid.draw(arrangeGrob(p,countTab,heights=c(3,1)))
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 chsummaryTable <- trial_mmrm %>% 
   group_by(group, month) %>%
   summarise(
@@ -574,7 +574,7 @@ chsummaryTable <- bind_rows(
 as.data.frame(chsummaryTable) %>% kable() %>% collapse_rows(1)
 
 
-## ----meanchplot---------------------------------------------------------------------------------------------------
+## ----meanchplot-------------------------------------------------------------------
 p <- ggplot(chsummaryTable, aes(x=month, y=mean, color=group)) +
   geom_line() +
   geom_errorbar(aes(min=lower95, max=upper95), position=position_dodge(0.2), width=0) +
@@ -584,7 +584,7 @@ p <- ggplot(chsummaryTable, aes(x=month, y=mean, color=group)) +
 grid.draw(arrangeGrob(p,countTab,heights=c(3,1)))
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 m1 <- subset(chsummaryTable, group=='active' & month==18)[['mean']]
 m2 <- subset(chsummaryTable, group=='placebo' & month==18)[['mean']]
 n1 <- subset(chsummaryTable, group=='active' & month==18)[['n']]
@@ -596,12 +596,12 @@ tt <- (m2-m1)/(s*sqrt(1/n2 + 1/n1))
 DF <- n1+n2-2
 
 
-## ----echo=FALSE---------------------------------------------------------------------------------------------------
+## ----echo=FALSE-------------------------------------------------------------------
 print(t.test(ADAS11.ch ~ group, data = trial_mmrm, subset = month==18, 
   var.equal=TRUE), digits = 6)
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 x <- seq(-5, 5, by = 0.01)
 dens <- data.frame(
 	x        =  x,
@@ -623,26 +623,26 @@ ggplot(dens, aes(x=x, y=density)) + geom_line() +
   annotate('text', x=1.96, y=0.4, label='x=1.96')
 
 
-## ----ancovai, echo = FALSE, size = 'scriptsize'-------------------------------------------------------------------
+## ----ancovai, echo = FALSE, size = 'scriptsize'-----------------------------------
 summary(lm(ADAS11.ch ~ active + ADAS11.m0, data = trial_mmrm))
 
 
-## ----ancovaii, echo = FALSE, size = 'scriptsize'------------------------------------------------------------------
+## ----ancovaii, echo = FALSE, size = 'scriptsize'----------------------------------
 summary(lm(ADAS11.ch ~ active*center(ADAS11.m0), data = trial_mmrm))
 
 
-## ----ancovaii2cov, echo = FALSE, size = 'scriptsize'--------------------------------------------------------------
+## ----ancovaii2cov, echo = FALSE, size = 'scriptsize'------------------------------
 summary(lm(ADAS11.ch ~ active*center(ADAS11.m0) + female + age_c, data = trial_mmrm))
 
 
-## ----trial_stage1_plot, echo = FALSE------------------------------------------------------------------------------
+## ----trial_stage1_plot, echo = FALSE----------------------------------------------
 ggplot(subset(trial, id %in% 1:4),
   aes(x=month, y=ADAS11, group = id, color = group)) +
   stat_smooth(method = 'lm') + geom_line() + geom_point() +
   facet_wrap(~id)
 
 
-## ----trial_fit_stage1, eval = TRUE, echo = FALSE, size = 'scriptsize'---------------------------------------------
+## ----trial_fit_stage1, eval = TRUE, echo = FALSE, size = 'scriptsize'-------------
 trial_stage1 <- as.data.frame(do.call(rbind, lapply(unique(trial$id),
   function(i){
     fit <- lm(ADAS11 ~ month,
@@ -655,22 +655,22 @@ trial_stage1 <- right_join(trial_stage1,
 head(trial_stage1) %>% kable()
 
 
-## ----size = 'scriptsize'------------------------------------------------------------------------------------------
+## ----size = 'scriptsize'----------------------------------------------------------
 summary(lm(ADAS11 ~ month, data = trial_obs, subset = id == 1))
 
 
-## ----trial_plot_stage2--------------------------------------------------------------------------------------------
+## ----trial_plot_stage2------------------------------------------------------------
 ggplot(trial_stage1,
   aes(x=group, y=beta.month, group = group, color = group)) +
   geom_boxplot(alpha = 0.25) + 
   ylab('ADAS11 change per month')
 
 
-## ----trial_stage2_fit---------------------------------------------------------------------------------------------
+## ----trial_stage2_fit-------------------------------------------------------------
 summary(lm(beta.month ~ female + age_c + active, data = trial_stage1))
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 save(center, trial, trial_obs, trial_wide, trial_mmrm, 
   months, attrition_rate, n, 
   Beta, countTab, summaryTable, file='simulated-trial.Rdata')
@@ -680,6 +680,6 @@ save(center, trial, trial_obs, trial_wide, trial_mmrm,
 
 
 
-## -----------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------
 print(sessionInfo(), locale=FALSE, RNG=FALSE)
 
