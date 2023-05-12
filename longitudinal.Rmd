@@ -1015,7 +1015,7 @@ Fit in `R`, using `nlme::gls`:
 ```{r eval=FALSE, echo=TRUE}
 gls(ADAS11 ~  female + age_c +   # bl covs
     ns(months, df=2) +        # natural spline for placebo (1 knot)
-    ns(months, df=2):active + # natural spline for active (1 knot)
+    ns(months, df=2):active   # natural spline for active (1 knot)
   correlation = corSymm(form = ~ visNo | id), # general correlation
   weights = varIdent(form = ~ 1 | visNo))     # heterogeneous variance
 ```
@@ -1036,7 +1036,7 @@ difficulty.
 
 ---
 
-## Modeled group contrasts for categorical, quadratic, and natrual cubic spline models
+## Modeled group contrasts for categorical, quadratic, and natural cubic spline models
 
 ```{r }
 cts <- bind_rows(

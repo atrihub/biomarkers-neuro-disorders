@@ -3,7 +3,7 @@
   <head>
     <title>Biostatistics for Imaging Biomarkers and Introduction to Longitudinal Data</title>
     <meta charset="utf-8" />
-    <script src="libs/header-attrs-2.14/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.21/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <link href="libs/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
@@ -239,7 +239,7 @@ class: inverse, middle, center
 
 .large[
 
-- Centiloids have become the industry standard standardized measure of amyloid PET (Klunk, et al., 2015)
+- Centiloids have become the industry standard standardized measure of amyloid PET (Klunk et al., 2015)
 - Helpful in multi-site studies where different amyloid PET tracers might be utilized.
 - What is a centiloid?
 
@@ -255,7 +255,7 @@ class: inverse, middle, center
 - 1.009 PiB SUVr (mean in young controls) `\(\rightarrow\)` 0 CL
 - 2.076 PiB SUVr (mean in AD cases) `\(\rightarrow\)` 100 CL
 - For other PiB SUVr values, draw the line from (1.009 SUVr, 0 CL) to (2.076 SUVr, 100 CL)
-- CL = 100 `\(\times\)` (PiB SUVr - 1.009)/1.067 (Klunk, et al., 2015)
+- CL = 100 `\(\times\)` (PiB SUVr - 1.009)/1.067 (Klunk et al., 2015)
 
 ]
 
@@ -285,7 +285,7 @@ class: inverse, middle, center
 
 `\(\textrm{SUVR}_{\textrm{FBB}} = 0.61 \times  \textrm{SUVR}_{\textrm{PiB}} + 0.39\)`
 
-Rowe, et al. (2017)
+Rowe et al. (2017)
 
 ---
 
@@ -293,7 +293,7 @@ Rowe, et al. (2017)
 
 &lt;img src="./images/properzi2019.png" width="75%"  style="display: block; margin: auto;" /&gt;
 
-Properzi, et al. (2019)
+Properzi et al. (2019)
 
 ???
 
@@ -490,7 +490,7 @@ Recall PiB had less representation of CU and Florbetapir had more with dementia
 
 &lt;img src="imaging_fig/z-score-densities-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 
-Useful for analysis, as in Li, et al. (2019)
+Useful for analysis, as in Li et al. (2019)
 
 ???
 
@@ -514,7 +514,7 @@ Useful for analysis
   * 0 (most healthy) to 1 (most severe) 
   * Comparable across different measures
 
-(Li, et al., 2019)
+(Li et al., 2019)
 
 ]
 
@@ -524,7 +524,7 @@ Useful for analysis
 
 &lt;img src="imaging_fig/unnamed-chunk-19-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 
-`\(^*\)` Using PiB = (Florbetapir - 0.502)/0.536 from Navitsky, et al. (2018)
+`\(^*\)` Using PiB = (Florbetapir - 0.502)/0.536 from Navitsky et al. (2018)
 
 ???
 
@@ -541,7 +541,7 @@ This will never happen with ECDF mapping.
 
 &lt;img src="imaging_fig/unnamed-chunk-20-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 
-`\(^*\)` Using Florbetapir = PiB `\(\times\)` 0.536 + 0.502 from Navitsky, et al. (2018)
+`\(^*\)` Using Florbetapir = PiB `\(\times\)` 0.536 + 0.502 from Navitsky et al. (2018)
 
 ???
 
@@ -553,7 +553,7 @@ This type of approach could also be useful for standardizing fluid assays
 
 &lt;img src="imaging_fig/unnamed-chunk-21-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 
-`\(^*\)` Using PiB = (Florbetapir - 0.503)/0.497 from Royse, et al. (2021)
+`\(^*\)` Using PiB = (Florbetapir - 0.503)/0.497 from Royse et al. (2021)
 
 ???
 
@@ -563,7 +563,7 @@ This type of approach could also be useful for standardizing fluid assays
 
 &lt;img src="imaging_fig/unnamed-chunk-22-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 
-`\(^*\)` Using Florbetapir = PiB `\(\times\)` 0.497 + 0.503 from Royse, et al. (2021)
+`\(^*\)` Using Florbetapir = PiB `\(\times\)` 0.497 + 0.503 from Royse et al. (2021)
 
 ???
 
@@ -585,7 +585,7 @@ dashed line is FBP threshold of 1.11
 
 ]
 
-From Royse, et al. (2021)
+From Royse et al. (2021)
 
 ---
 
@@ -620,33 +620,33 @@ Linear mixed-effects model fit by REML
   Data: ADNIMERGE::adnimerge 
   Subset: M &lt;= 24 &amp; DX.bl == "AD" 
    AIC  BIC logLik
-  7698 7739  -3841
+  7710 7751  -3847
 
 Random effects:
  Formula: ~M | RID
  Structure: General positive-definite, Log-Cholesky parametrization
             StdDev Corr  
 (Intercept) 5.99   (Intr)
-M           0.38   0.54  
-Residual    3.36         
+M           0.38   0.53  
+Residual    3.35         
 
 Fixed effects:  ADAS11 ~ PTGENDER + center(AGE) + I(Years.bl * 12) 
                  Value Std.Error  DF t-value p-value
-(Intercept)       19.6      0.49 794      40   0.000
-PTGENDERMale      -0.3      0.65 407       0   0.640
+(Intercept)       19.6      0.49 796      40   0.000
+PTGENDERMale      -0.3      0.65 407       0   0.632
 center(AGE)        0.1      0.04 407       2   0.036
-I(Years.bl * 12)   0.4      0.02 794      16   0.000
+I(Years.bl * 12)   0.4      0.02 796      17   0.000
  Correlation: 
                  (Intr) PTGEND c(AGE)
 PTGENDERMale     -0.744              
-center(AGE)       0.075 -0.087       
-I(Years.bl * 12)  0.125  0.001  0.014
+center(AGE)       0.075 -0.088       
+I(Years.bl * 12)  0.125  0.002  0.014
 
 Standardized Within-Group Residuals:
    Min     Q1    Med     Q3    Max 
--2.742 -0.442 -0.042  0.422  2.472 
+-2.744 -0.443 -0.041  0.423  2.473 
 
-Number of Observations: 1205
+Number of Observations: 1207
 Number of Groups: 410 
 ```
 
@@ -1626,7 +1626,7 @@ Statistician_ 55.4, pp. 314-321.
 
 
 ```
-R version 4.2.1 (2022-06-23)
+R version 4.2.2 (2022-10-31)
 Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Big Sur ... 10.16
 
@@ -1639,45 +1639,47 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] RefManageR_1.3.0 mice_3.14.0      mvtnorm_1.1-3    arsenal_3.6.3   
- [5] emmeans_1.7.3    nlme_3.1-157     plotly_4.10.0    gridExtra_2.3   
- [9] kableExtra_1.3.4 forcats_0.5.1    stringr_1.4.0    dplyr_1.0.9     
-[13] purrr_0.3.4      readr_2.1.2      tidyr_1.2.0      tibble_3.1.7    
-[17] tidyverse_1.3.1  knitr_1.39       Hmisc_4.7-0      ggplot2_3.3.6   
-[21] Formula_1.2-4    survival_3.3-1   lattice_0.20-45 
+ [1] RefManageR_1.4.0 mice_3.14.0      mvtnorm_1.1-3    arsenal_3.6.3   
+ [5] emmeans_1.7.5    nlme_3.1-160     plotly_4.10.0    gridExtra_2.3   
+ [9] kableExtra_1.3.4 forcats_0.5.1    stringr_1.4.0    dplyr_1.1.0     
+[13] purrr_0.3.4      readr_2.1.2      tidyr_1.2.1      tibble_3.1.7    
+[17] tidyverse_1.3.2  knitr_1.39       Hmisc_4.7-1      ggplot2_3.4.0   
+[21] Formula_1.2-4    survival_3.4-0   lattice_0.20-45 
 
 loaded via a namespace (and not attached):
- [1] TH.data_1.1-1       colorspace_2.0-3    ellipsis_0.3.2     
- [4] estimability_1.3    htmlTable_2.4.0     base64enc_0.1-3    
- [7] fs_1.5.2            xaringanExtra_0.5.5 rstudioapi_0.13    
-[10] farver_2.1.1        xaringan_0.24       fansi_1.0.3        
-[13] lubridate_1.8.0     xml2_1.3.3          codetools_0.2-18   
-[16] splines_4.2.1       jsonlite_1.8.0      broom_0.8.0        
-[19] cluster_2.1.3       dbplyr_2.1.1        png_0.1-7          
-[22] compiler_4.2.1      httr_1.4.3          backports_1.4.1    
-[25] assertthat_0.2.1    Matrix_1.4-1        fastmap_1.1.0      
-[28] lazyeval_0.2.2      cli_3.3.0           htmltools_0.5.2    
-[31] tools_4.2.1         coda_0.19-4         gtable_0.3.0       
-[34] glue_1.6.2          Rcpp_1.0.9          cellranger_1.1.0   
-[37] jquerylib_0.1.4     vctrs_0.4.1         svglite_2.1.0      
-[40] xfun_0.31           rvest_1.0.2         lifecycle_1.0.1    
-[43] MASS_7.3-57         zoo_1.8-10          scales_1.2.0       
-[46] hms_1.1.1           sandwich_3.0-1      RColorBrewer_1.1-3 
-[49] yaml_2.3.5          sass_0.4.1          rpart_4.1.16       
-[52] latticeExtra_0.6-29 stringi_1.7.6       highr_0.9          
-[55] checkmate_2.1.0     bibtex_0.4.2.3      rlang_1.0.4        
-[58] pkgconfig_2.0.3     systemfonts_1.0.4   evaluate_0.15      
-[61] htmlwidgets_1.5.4   labeling_0.4.2      tidyselect_1.1.2   
-[64] plyr_1.8.7          magrittr_2.0.3      R6_2.5.1           
-[67] generics_0.1.2      multcomp_1.4-19     DBI_1.1.2          
-[70] pillar_1.8.0        haven_2.5.0         foreign_0.8-82     
-[73] withr_2.5.0         mgcv_1.8-40         nnet_7.3-17        
-[76] modelr_0.1.8        crayon_1.5.1        utf8_1.2.2         
-[79] ADNIMERGE_0.0.1     tzdb_0.3.0          rmarkdown_2.14     
-[82] jpeg_0.1-9          readxl_1.4.0        data.table_1.14.2  
-[85] reprex_2.0.1        digest_0.6.29       webshot_0.5.3      
-[88] xtable_1.8-4        munsell_0.5.0       viridisLite_0.4.0  
-[91] bslib_0.3.1        
+ [1] TH.data_1.1-1       googledrive_2.0.0   colorspace_2.0-3   
+ [4] deldir_1.0-6        ellipsis_0.3.2      estimability_1.4   
+ [7] htmlTable_2.4.1     base64enc_0.1-3     fs_1.5.2           
+[10] xaringanExtra_0.7.0 rstudioapi_0.13     farver_2.1.1       
+[13] xaringan_0.28       fansi_1.0.3         lubridate_1.9.0    
+[16] xml2_1.3.3          codetools_0.2-18    splines_4.2.2      
+[19] jsonlite_1.8.0      broom_1.0.0         cluster_2.1.4      
+[22] dbplyr_2.2.1        png_0.1-7           compiler_4.2.2     
+[25] httr_1.4.3          backports_1.4.1     assertthat_0.2.1   
+[28] Matrix_1.5-1        fastmap_1.1.0       lazyeval_0.2.2     
+[31] gargle_1.2.0        cli_3.6.0           htmltools_0.5.2    
+[34] tools_4.2.2         coda_0.19-4         gtable_0.3.0       
+[37] glue_1.6.2          Rcpp_1.0.9          cellranger_1.1.0   
+[40] jquerylib_0.1.4     vctrs_0.5.2         svglite_2.1.0      
+[43] xfun_0.31           rvest_1.0.2         timechange_0.1.1   
+[46] lifecycle_1.0.3     googlesheets4_1.0.0 MASS_7.3-58.1      
+[49] zoo_1.8-10          scales_1.2.0        hms_1.1.1          
+[52] sandwich_3.0-2      RColorBrewer_1.1-3  yaml_2.3.5         
+[55] sass_0.4.1          rpart_4.1.19        latticeExtra_0.6-30
+[58] stringi_1.7.8       highr_0.9           checkmate_2.1.0    
+[61] bibtex_0.5.1        rlang_1.0.6         pkgconfig_2.0.3    
+[64] systemfonts_1.0.4   evaluate_0.15       labeling_0.4.2     
+[67] htmlwidgets_1.5.4   tidyselect_1.2.0    plyr_1.8.7         
+[70] magrittr_2.0.3      R6_2.5.1            generics_0.1.3     
+[73] multcomp_1.4-19     DBI_1.1.3           mgcv_1.8-41        
+[76] pillar_1.7.0        haven_2.5.0         foreign_0.8-83     
+[79] withr_2.5.0         nnet_7.3-18         modelr_0.1.8       
+[82] crayon_1.5.1        interp_1.1-3        utf8_1.2.2         
+[85] ADNIMERGE_0.0.1     tzdb_0.3.0          rmarkdown_2.14     
+[88] jpeg_0.1-9          readxl_1.4.0        data.table_1.14.2  
+[91] reprex_2.0.1        digest_0.6.29       webshot_0.5.3      
+[94] xtable_1.8-4        munsell_0.5.0       viridisLite_0.4.0  
+[97] bslib_0.3.1        
 ```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

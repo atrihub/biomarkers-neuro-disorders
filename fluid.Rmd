@@ -32,6 +32,10 @@ BarcelonaBeta Brain Research Center
 May 2023
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+# renv::activate() # to active renv
+# renv::restore() # to update packages according to renv.lock file
+# copy any non-CRAN packages to renv:::renv_paths_cellar()
+# install.packages(file.path(renv:::renv_paths_cellar(), 'package_file.tar.gz'), repos = NULL)
 # devtools::install_url('https://cran.rstudio.com/src/contrib/Archive/calibFit/calibFit_2.1.0.tar.gz')
 # remotes::install_github('atrihub/SRS')
 # remotes::install_github("gadenbuie/xaringanExtra")
