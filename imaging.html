@@ -55,7 +55,7 @@ May 2023
 .large[
 - Reference Regions
 - Centiloids
-- Standardization using the Empirical Cumulative Distribution Function (ECDF)
+- Harmonization using the Empirical Cumulative Distribution Function (ECDF)
 - Intro to longitudinal data analysis
   - Summaries and plots
   - Regression
@@ -78,7 +78,7 @@ A common issue with statistical analyses of numeric summaries derived from imagi
 
 Examples:
 
-- Volumetric MRI: regional (e.g. hippocampal) volume relative to IntraCranial Volume (ICV)
+- Volumetric MRI: regional (e.g. hippocampal) volume relative to Intra-Cranial Volume (ICV)
 - Amyloid PET: cortical-to-cerebellum Standardized Uptake Value Ratio (SUVr)
 
 (Also an issue in non-imaging data, e.g. ratio of CSF `\(\textrm{A}\beta_{1-42}\)` to `\(\textrm{A}\beta_{1-40}\)`)
@@ -103,7 +103,7 @@ Examples abound: %ICV, SUVR, BMI, ...
 
 
 ```r
-lm_fit1_gender &lt;- lm(I(Hippocampus/ICV*100) ~ PTGENDER, data=dd2)
+lm_fit1_sex &lt;- lm(I(Hippocampus/ICV*100) ~ Sex, data=dd2)
 ```
 
 &lt;table&gt;
@@ -119,22 +119,22 @@ lm_fit1_gender &lt;- lm(I(Hippocampus/ICV*100) ~ PTGENDER, data=dd2)
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.48 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 181.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 148.3 &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; &amp;lt;0.001 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; PTGENDERMale &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.04 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SexFemale &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.04 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -9.2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.2 &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; &amp;lt;0.001 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-- Signficant association between Gender and Hippocampal Volume (%ICV)!
+- Signficant association between Sex and Hippocampal Volume (%ICV)!
 - (This linear model is essential just a two-sample t-test)
 - Model fit to ADNI CN
 
@@ -144,7 +144,7 @@ lm_fit1_gender &lt;- lm(I(Hippocampus/ICV*100) ~ PTGENDER, data=dd2)
 
 
 ```r
-lm_fit2_gender &lt;- lm(Hippocampus ~ ICV + PTGENDER, data=dd2)
+lm_fit2_sex &lt;- lm(Hippocampus ~ ICV + Sex, data=dd2)
 ```
 
 &lt;table&gt;
@@ -160,42 +160,42 @@ lm_fit2_gender &lt;- lm(Hippocampus ~ ICV + PTGENDER, data=dd2)
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4436 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 322 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 13.77 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4407 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 366 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12.0 &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; &amp;lt;0.001 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; ICV &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 9.04 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.1 &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; &amp;lt;0.001 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; PTGENDERMale &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -29 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SexFemale &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 29 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 74 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.39 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.4 &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; 0.69 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-- No association between Gender and Hippocampal Volume ( `\(\text{mm}^3\)` )!
+- No association between Sex and Hippocampal Volume ( `\(\text{mm}^3\)` )!
 - The **spurious association** in first model is driven by denominator (ICV), not numerator (hippocampal volume)
 
 ---
 
-# Hippocampus vs ICV and Gender
+# Hippocampus vs ICV and Sex
 
 .pull-leftWider[
-&lt;img src="imaging_fig/hipp_gender_scatter-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
+&lt;img src="imaging_fig/hipp_sex_scatter-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-rightNarrower[
 
-- For a given ICV, there is not much difference between genders
+- For a given ICV, there is not much difference between sexes
 - These linear fits are more flexible than model above (two slopes for ICV vs one)
 
 ]
@@ -204,7 +204,7 @@ lm_fit2_gender &lt;- lm(Hippocampus ~ ICV + PTGENDER, data=dd2)
 
 # Hippocampal volume ( `\(\textrm{mm}^3\)`, %ICV, and model-adjusted)
 
-&lt;img src="imaging_fig/hipp_gender_box-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
+&lt;img src="imaging_fig/hipp_sex_box-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -212,7 +212,7 @@ lm_fit2_gender &lt;- lm(Hippocampus ~ ICV + PTGENDER, data=dd2)
 
 .pull-leftWider[
 
-&lt;img src="imaging_fig/hipp_adj_gender_scatter-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
+&lt;img src="imaging_fig/hipp_adj_sex_scatter-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -297,7 +297,7 @@ Properzi et al. (2019)
 
 ???
 
-Another approach is normalizing data from different tracers (or fluid assays for that matter) is map distributions.
+Another approach to normalizing data from different tracers (or fluid assays for that matter) is to map distributions.
 
 If we only have unpaired data from similar populations, we can map one to other under the assumption that their distributions should have similar shape.
 
@@ -311,7 +311,7 @@ If we only have unpaired data from similar populations, we can map one to other 
 
 CDFs are useful one-to-one maps
 
-Underly random number generators. A random number from a uniform 0-1 distribution can be mapped to any other distribution by the inverse CDF.
+Underlie random number generators. A random number from a uniform 0-1 distribution can be mapped to any other distribution by the inverse CDF.
 
 In this case we can map PiB SUVRs to florbetapir SUVRs or vice versa
 
@@ -407,29 +407,20 @@ dd &lt;- dd %&gt;% mutate(
 # Weighted ECDFs to correct for sample differences
 
 
+
+
 ```r
 # Create adjusted ECDF functions (mapping SUVRs to Cumulative Probabilities)
 # Hmisc::wtd.Ecdf returns a data.frame evaluating the ECDF at each observed value
-PiB.ecdf.data &lt;- with(subset(dd, Tracer == 'PiB'), 
-  Hmisc::wtd.Ecdf(SUVR, weights=wt, normwt=TRUE))
-Fbp.ecdf.data &lt;- with(subset(dd, Tracer == 'Florbetapir'), 
-  Hmisc::wtd.Ecdf(SUVR, weights=wt, normwt=TRUE))
-
-# approxfun creates a function via linear interpolation 
-# mapping SUVRs to cumulative probabilities (0 to 1 scale)
-PiB.ecdf &lt;- with(PiB.ecdf.data, approxfun(x, ecdf, rule=2))
-Fbp.ecdf &lt;- with(Fbp.ecdf.data, approxfun(x, ecdf, rule=2))
+PiB.ecdf &lt;- with(subset(dd, Tracer == 'PiB'), ecdf.func(SUVR, weights=wt))
+Fbp.ecdf &lt;- with(subset(dd, Tracer == 'Florbetapir'), ecdf.func(SUVR, weights=wt))
 
 # Create adjusted **inverse** ECDF functions 
 # mapping Cumulative Probabilities (0 to 1 scale) to SUVRs
-Probs &lt;- seq(0,1,by=0.01)
-PiB.inv.ecdf.data &lt;- as.numeric(with(subset(dd, Tracer == 'PiB'), 
-  Hmisc::wtd.quantile(SUVR, weights=wt, normwt=TRUE, probs=Probs)))
-Fbp.inv.ecdf.data &lt;- as.numeric(with(subset(dd, Tracer == 'Florbetapir'), 
-  Hmisc::wtd.quantile(SUVR, weights=wt, normwt=TRUE, probs=Probs)))
-
-PiB.inv.ecdf &lt;- approxfun(Probs, PiB.inv.ecdf.data, rule=2)
-Fbp.inv.ecdf &lt;- approxfun(Probs, Fbp.inv.ecdf.data, rule=2)
+PiB.inv.ecdf &lt;- with(subset(dd, Tracer == 'PiB'), 
+ inv.ecdf(SUVR, weights=wt))
+Fbp.inv.ecdf &lt;- with(subset(dd, Tracer == 'Florbetapir'),  
+ inv.ecdf(SUVR, weights=wt))
 ```
 
 ---
@@ -462,9 +453,9 @@ dd &lt;- dd %&gt;% mutate(
 
 ---
 
-# Centiloids vs ADNI Percentiles
+# Centiloids vs ADNI Adjusted Percentiles
 
-&lt;img src="imaging_fig/unnamed-chunk-17-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
+&lt;img src="imaging_fig/unnamed-chunk-18-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -522,7 +513,7 @@ Useful for analysis
 
 # Validation on a holdout set with both tracers (FBB `\(\rightarrow\)` PiB)
 
-&lt;img src="imaging_fig/unnamed-chunk-19-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
+&lt;img src="imaging_fig/unnamed-chunk-20-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 
 `\(^*\)` Using PiB = (Florbetapir - 0.502)/0.536 from Navitsky et al. (2018)
 
@@ -539,7 +530,7 @@ This will never happen with ECDF mapping.
 
 # Validation on a holdout set with both tracers (PiB `\(\rightarrow\)` FBB)
 
-&lt;img src="imaging_fig/unnamed-chunk-20-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
+&lt;img src="imaging_fig/unnamed-chunk-21-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 
 `\(^*\)` Using Florbetapir = PiB `\(\times\)` 0.536 + 0.502 from Navitsky et al. (2018)
 
@@ -551,7 +542,7 @@ This type of approach could also be useful for standardizing fluid assays
 
 # Validation on a holdout set with both tracers (FBB `\(\rightarrow\)` PiB)
 
-&lt;img src="imaging_fig/unnamed-chunk-21-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
+&lt;img src="imaging_fig/unnamed-chunk-22-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 
 `\(^*\)` Using PiB = (Florbetapir - 0.503)/0.497 from Royse et al. (2021)
 
@@ -561,7 +552,7 @@ This type of approach could also be useful for standardizing fluid assays
 
 # Validation on a holdout set with both tracers (PiB `\(\rightarrow\)` FBB)
 
-&lt;img src="imaging_fig/unnamed-chunk-22-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
+&lt;img src="imaging_fig/unnamed-chunk-23-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 
 `\(^*\)` Using Florbetapir = PiB `\(\times\)` 0.497 + 0.503 from Royse et al. (2021)
 
@@ -617,36 +608,36 @@ class: inverse, middle, center
 
 ```
 Linear mixed-effects model fit by REML
-  Data: ADNIMERGE::adnimerge 
+  Data: ADNIMERGE::adnimerge %&gt;% mutate(Sex = factor(PTGENDER, levels = c("Male",      "Female"))) 
   Subset: M &lt;= 24 &amp; DX.bl == "AD" 
    AIC  BIC logLik
-  7710 7751  -3847
+  7719 7759  -3851
 
 Random effects:
  Formula: ~M | RID
  Structure: General positive-definite, Log-Cholesky parametrization
             StdDev Corr  
-(Intercept) 5.99   (Intr)
+(Intercept) 5.98   (Intr)
 M           0.38   0.53  
-Residual    3.35         
+Residual    3.36         
 
-Fixed effects:  ADAS11 ~ PTGENDER + center(AGE) + I(Years.bl * 12) 
+Fixed effects:  ADAS11 ~ Sex + center(AGE) + I(Years.bl * 12) 
                  Value Std.Error  DF t-value p-value
-(Intercept)       19.6      0.49 796      40   0.000
-PTGENDERMale      -0.3      0.65 407       0   0.632
-center(AGE)        0.1      0.04 407       2   0.036
-I(Years.bl * 12)   0.4      0.02 796      17   0.000
+(Intercept)       19.3      0.44 797      44   0.000
+SexFemale          0.3      0.65 407       0   0.623
+center(AGE)        0.1      0.04 407       2   0.038
+I(Years.bl * 12)   0.4      0.02 797      16   0.000
  Correlation: 
-                 (Intr) PTGEND c(AGE)
-PTGENDERMale     -0.744              
-center(AGE)       0.075 -0.088       
-I(Years.bl * 12)  0.125  0.002  0.014
+                 (Intr) SexFml c(AGE)
+SexFemale        -0.658              
+center(AGE)      -0.046  0.088       
+I(Years.bl * 12)  0.138 -0.001  0.014
 
 Standardized Within-Group Residuals:
    Min     Q1    Med     Q3    Max 
--2.744 -0.443 -0.041  0.423  2.473 
+-2.738 -0.443 -0.041  0.416  2.463 
 
-Number of Observations: 1207
+Number of Observations: 1208
 Number of Groups: 410 
 ```
 
@@ -1188,7 +1179,7 @@ mean in group placebo  mean in group active
 
 `\(p\)`-value is area under curve for `\(|x|&gt;1.92\)`, the value of the test statistic in this case. This area is depicted in blue here (area = `\(p\)` = 0.055).
 
-&lt;img src="imaging_fig/unnamed-chunk-33-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
+&lt;img src="imaging_fig/unnamed-chunk-34-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -1610,15 +1601,13 @@ imaging_ 44.12, pp. 2053-2059.
 
 # References (2/2)
 
-Royse, S. K., D. S. Minhas, B. J. Lopresti, A. Murphy, T. Ward, R. A.
-Koeppe, S. Bullich, S. DeSanti, W. J. Jagust, and S. M. Landau (2021).
-"Validation of amyloid PET positivity thresholds in centiloids: a
-multisite PET study approach". In: _Alzheimer's Research &amp; Therapy_
-13.1, pp. 1-10.
+Royse, S. K. et al. (2021). "Validation of amyloid PET positivity
+thresholds in centiloids: a multisite PET study approach". In:
+_Alzheimer's Research &amp; Therapy_ 13.1, pp. 1-10.
 
-Yang, L. and A. A. Tsiatis (2001). "Efficiency study of estimators for
-a treatment effect in a pretest-posttest trial". In: _The American
-Statistician_ 55.4, pp. 314-321.
+Yang, L. et al. (2001). "Efficiency study of estimators for a treatment
+effect in a pretest-posttest trial". In: _The American Statistician_
+55.4, pp. 314-321.
 
 ---
 
@@ -1635,51 +1624,44 @@ BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dy
 LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
 
 attached base packages:
-[1] grid      stats     graphics  grDevices utils     datasets  methods  
+[1] grid      stats     graphics  grDevices datasets  utils     methods  
 [8] base     
 
 other attached packages:
- [1] RefManageR_1.4.0 mice_3.14.0      mvtnorm_1.1-3    arsenal_3.6.3   
- [5] emmeans_1.7.5    nlme_3.1-160     plotly_4.10.0    gridExtra_2.3   
- [9] kableExtra_1.3.4 forcats_0.5.1    stringr_1.4.0    dplyr_1.1.0     
-[13] purrr_0.3.4      readr_2.1.2      tidyr_1.2.1      tibble_3.1.7    
-[17] tidyverse_1.3.2  knitr_1.39       Hmisc_4.7-1      ggplot2_3.4.0   
-[21] Formula_1.2-4    survival_3.4-0   lattice_0.20-45 
+ [1] Formula_1.2-5    survival_3.4-0   lattice_0.20-45  RefManageR_1.4.0
+ [5] mice_3.15.0      mvtnorm_1.1-3    arsenal_3.6.3    emmeans_1.8.6   
+ [9] nlme_3.1-160     plotly_4.10.1    gridExtra_2.3    kableExtra_1.3.4
+[13] lubridate_1.9.2  forcats_1.0.0    stringr_1.5.0    dplyr_1.1.2     
+[17] purrr_1.0.1      readr_2.1.4      tidyr_1.3.0      tibble_3.2.1    
+[21] ggplot2_3.4.2    tidyverse_2.0.0  knitr_1.42       Hmisc_5.1-0     
 
 loaded via a namespace (and not attached):
- [1] TH.data_1.1-1       googledrive_2.0.0   colorspace_2.0-3   
- [4] deldir_1.0-6        ellipsis_0.3.2      estimability_1.4   
- [7] htmlTable_2.4.1     base64enc_0.1-3     fs_1.5.2           
-[10] xaringanExtra_0.7.0 rstudioapi_0.13     farver_2.1.1       
-[13] xaringan_0.28       fansi_1.0.3         lubridate_1.9.0    
-[16] xml2_1.3.3          codetools_0.2-18    splines_4.2.2      
-[19] jsonlite_1.8.0      broom_1.0.0         cluster_2.1.4      
-[22] dbplyr_2.2.1        png_0.1-7           compiler_4.2.2     
-[25] httr_1.4.3          backports_1.4.1     assertthat_0.2.1   
-[28] Matrix_1.5-1        fastmap_1.1.0       lazyeval_0.2.2     
-[31] gargle_1.2.0        cli_3.6.0           htmltools_0.5.2    
-[34] tools_4.2.2         coda_0.19-4         gtable_0.3.0       
-[37] glue_1.6.2          Rcpp_1.0.9          cellranger_1.1.0   
-[40] jquerylib_0.1.4     vctrs_0.5.2         svglite_2.1.0      
-[43] xfun_0.31           rvest_1.0.2         timechange_0.1.1   
-[46] lifecycle_1.0.3     googlesheets4_1.0.0 MASS_7.3-58.1      
-[49] zoo_1.8-10          scales_1.2.0        hms_1.1.1          
-[52] sandwich_3.0-2      RColorBrewer_1.1-3  yaml_2.3.5         
-[55] sass_0.4.1          rpart_4.1.19        latticeExtra_0.6-30
-[58] stringi_1.7.8       highr_0.9           checkmate_2.1.0    
-[61] bibtex_0.5.1        rlang_1.0.6         pkgconfig_2.0.3    
-[64] systemfonts_1.0.4   evaluate_0.15       labeling_0.4.2     
-[67] htmlwidgets_1.5.4   tidyselect_1.2.0    plyr_1.8.7         
-[70] magrittr_2.0.3      R6_2.5.1            generics_0.1.3     
-[73] multcomp_1.4-19     DBI_1.1.3           mgcv_1.8-41        
-[76] pillar_1.7.0        haven_2.5.0         foreign_0.8-83     
-[79] withr_2.5.0         nnet_7.3-18         modelr_0.1.8       
-[82] crayon_1.5.1        interp_1.1-3        utf8_1.2.2         
-[85] ADNIMERGE_0.0.1     tzdb_0.3.0          rmarkdown_2.14     
-[88] jpeg_0.1-9          readxl_1.4.0        data.table_1.14.2  
-[91] reprex_2.0.1        digest_0.6.29       webshot_0.5.3      
-[94] xtable_1.8-4        munsell_0.5.0       viridisLite_0.4.0  
-[97] bslib_0.3.1        
+ [1] webshot_0.5.4       httr_1.4.6          tools_4.2.2        
+ [4] backports_1.4.1     bslib_0.4.2         utf8_1.2.3         
+ [7] R6_2.5.1            rpart_4.1.19        mgcv_1.8-41        
+[10] lazyeval_0.2.2      colorspace_2.1-0    nnet_7.3-18        
+[13] withr_2.5.0         tidyselect_1.2.0    compiler_4.2.2     
+[16] cli_3.6.1           rvest_1.0.3         htmlTable_2.4.1    
+[19] xml2_1.3.4          sandwich_3.0-2      labeling_0.4.2     
+[22] sass_0.4.6          scales_1.2.1        checkmate_2.2.0    
+[25] systemfonts_1.0.4   digest_0.6.31       foreign_0.8-83     
+[28] rmarkdown_2.21      svglite_2.1.1       base64enc_0.1-3    
+[31] pkgconfig_2.0.3     htmltools_0.5.5     bibtex_0.5.1       
+[34] highr_0.10          fastmap_1.1.1       htmlwidgets_1.6.2  
+[37] rlang_1.1.1         rstudioapi_0.14     xaringan_0.28      
+[40] farver_2.1.1        jquerylib_0.1.4     generics_0.1.3     
+[43] zoo_1.8-12          jsonlite_1.8.4      magrittr_2.0.3     
+[46] Matrix_1.5-1        Rcpp_1.0.10         munsell_0.5.0      
+[49] fansi_1.0.4         lifecycle_1.0.3     stringi_1.7.12     
+[52] multcomp_1.4-23     yaml_2.3.7          MASS_7.3-58.1      
+[55] plyr_1.8.8          splines_4.2.2       hms_1.1.3          
+[58] pillar_1.9.0        estimability_1.4.1  codetools_0.2-18   
+[61] glue_1.6.2          evaluate_0.21       data.table_1.14.8  
+[64] renv_0.16.0         vctrs_0.6.2         tzdb_0.3.0         
+[67] gtable_0.3.3        cachem_1.0.8        xfun_0.39          
+[70] xtable_1.8-4        broom_1.0.4         viridisLite_0.4.2  
+[73] ADNIMERGE_0.0.1     cluster_2.1.4       timechange_0.2.0   
+[76] TH.data_1.1-2       xaringanExtra_0.7.0
 ```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

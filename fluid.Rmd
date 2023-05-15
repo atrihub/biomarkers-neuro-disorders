@@ -138,6 +138,7 @@ Topics:
 
 - Hour 1 -- Biostatistics for Fluid Biomarkers
 - Hour 2 -- Biostatistics for Imaging Biomarkers
+  - Intro to Longitudinal Data
 - Hour 3 -- Modeling Longitudinal Data
 
 Emphases:
@@ -296,8 +297,8 @@ One way to ensure this, is to randomize samples to batches
 - Randomize samples to batches/plates
 - Longitudinally collected samples (samples collected over time on same individual):
   - If batch effects are expected to be larger than storage effects, consider randomizing *individuals* to batches (i.e. keep all samples from individual on the same plate)
-  - However, if storage effects are a concern, 
-- Randomization can be stratified to ensure important factors (e.g. treatment group, age, APOE $\epsilon4$) are balanced
+  - However, if storage effects are a concern, timely sample processing might be preferred.
+- Randomization can be stratified to ensure important factors (e.g. treatment group, age, APOE $\epsilon4$) are balanced over batches.
 ]
 
 ---
@@ -678,7 +679,7 @@ plot(cal.lin.pom,print=FALSE,main = "HPLC data fit with POM",xlab = "Concentrati
 
 ???
 
-The mean does not change much, but we get more accurate 95% confidence bands
+The mean does not change much, but we get more accurate and tighter 95% confidence bands
 
 ---
 
@@ -758,8 +759,8 @@ dd <- subset(ADNIMERGE::adnimerge, !is.na(ABETA)) %>%
   mutate(
     ABETA = as.numeric(gsub('<', '', gsub('>', '', ABETA))),
     TAU = as.numeric(gsub('<', '', gsub('>', '', TAU))),
-    PTAU = as.numeric(gsub('<', '', gsub('>', '', PTAU)))
-  )
+    PTAU = as.numeric(gsub('<', '', gsub('>', '', PTAU))),
+    DX2 = factor(DX, levels = c('CN', 'Dementia')))
 
 ggplot(dd, aes(x=ABETA, y=TAU)) + 
   geom_point(aes(color=DX)) +
@@ -785,7 +786,7 @@ ggplot(dd, aes(x=ABETA, y=TAU)) +
 
 ```{r classification_no_mci}
 ggplot(subset(dd, DX!='MCI'), aes(x=ABETA, y=TAU)) + 
-  geom_point(aes(color=DX)) +
+  geom_point(aes(color=DX2)) +
   scale_color_manual(values=c("#0072B2", "#D55E00"))
 ```
 
@@ -796,7 +797,7 @@ ggplot(subset(dd, DX!='MCI'), aes(x=ABETA, y=TAU)) +
 .pull-left[
 
 ```{r ROC_abeta, fig.width=5, fig.height=5}
-roc_abeta <- roc((DX=='Dementia') ~ ABETA, subset(dd, DX!='MCI'))
+roc_abeta <- roc(DX2 ~ ABETA, subset(dd, DX!='MCI'))
 # ggroc(roc_abeta)
 plot(roc_abeta, print.thres="best", print.thres.best.method="youden")
 ```
@@ -839,8 +840,8 @@ Youden's index gives equal weight to false positives and false negatives (not ne
 .pull-left[
 
 ```{r ROC_abeta_tau, fig.width=5, fig.height=5}
-roc_tau <- roc((DX=='Dementia') ~ TAU, subset(dd, DX!='MCI'))
-roc_tauabeta <- roc((DX=='Dementia') ~ I(TAU/ABETA), subset(dd, DX!='MCI'))
+roc_tau <- roc(DX2 ~ TAU, subset(dd, DX!='MCI'))
+roc_tauabeta <- roc(DX2 ~ I(TAU/ABETA), subset(dd, DX!='MCI'))
 
 plot(roc_abeta, col='blue')
 plot(roc_tau, add=TRUE, col='orange')
@@ -879,23 +880,23 @@ roc.test(roc_abeta, roc_tauabeta)
 
 ```{r abeta_tau_scatter_youden, fig.height=2.5, fig.width=3*2}
 ggplot(subset(dd, DX!='MCI'), aes(x=ABETA, y=TAU)) + 
-  geom_point(aes(color=DX)) +
+  geom_point(aes(color=DX2)) +
   scale_color_manual(values=c("#0072B2", "#D55E00")) +
   geom_abline(intercept = 0, slope=0.394)
 ```
 
-Line is Tau = 0.394 $\times$ Abeta, depicting Youden's cutoff (maximizes sensitivity + specificity - 1)
+Line is Tau = 0.394 $\times$ Abeta, depicting Youden's cutoff (maximizes sensitivity + specificity)
 
 ???
 
-Youden's cutoff maximizing sensitivity + specificity - 1 is appropriate if sensitivity and specificity are equally important
+Youden's cutoff maximizing sensitivity + specificity is appropriate if sensitivity and specificity are equally important
 
 ---
 
 # Logistic Regression
 
 ```{r}
-logistic.fit <- glm((DX=='Dementia') ~ scale(ABETA) + scale(TAU), 
+logistic.fit <- glm(DX2 ~ scale(ABETA) + scale(TAU), 
   data = subset(dd, DX!='MCI'), family=binomial)
 summary(logistic.fit)$coef %>%
   as_tibble(rownames = NA) %>% 
@@ -996,7 +997,7 @@ lines now are where predicted probabilities from logistic regression are constan
 .pull-left[
 
 ```{r ROC_logistic, fig.width=5, fig.height=5}
-roc_logistic.fit <- roc((DX=='Dementia') ~ predict(logistic.fit, type='response'), subset(dd, DX!='MCI'))
+roc_logistic.fit <- roc(DX2 ~ predict(logistic.fit, type='response'), subset(dd, DX!='MCI'))
 
 plot(roc_abeta, col='blue')
 plot(roc_tau, add=TRUE, col='orange')
@@ -1034,7 +1035,7 @@ roc.test(roc_abeta, roc_logistic.fit)
 # Logistic Regression with Age and APOE
 
 ```{r}
-logistic.fit2 <- glm((DX=='Dementia') ~ scale(ABETA) + scale(TAU) + scale(I(AGE+Years.bl)) + as.factor(APOE4), family=binomial, data = subset(dd, DX!='MCI'))
+logistic.fit2 <- glm(DX2 ~ scale(ABETA) + scale(TAU) + scale(I(AGE+Years.bl)) + as.factor(APOE4), family=binomial, data = subset(dd, DX!='MCI'))
 summary(logistic.fit2)$coef %>% 
   as_tibble(rownames = NA) %>% 
   rownames_to_column(var='Coefficient') %>%
@@ -1043,7 +1044,7 @@ summary(logistic.fit2)$coef %>%
 ```
 
 ```{r, eval=FALSE}
-roc_logistic.fit2 <- roc((DX=='Dementia') ~ predict(logistic.fit2, type='response'), subset(dd, DX!='MCI'))
+roc_logistic.fit2 <- roc(DX2 ~ predict(logistic.fit2, type='response'), subset(dd, DX!='MCI'))
 roc.test(roc_abeta, roc_logistic.fit2)
 roc.test(roc_tauabeta, roc_logistic.fit2)
 auc(roc_logistic.fit2); ci(roc_logistic.fit2)
@@ -1056,7 +1057,8 @@ This model does not provide much better ROC, either.
 # Regression Trees
 
 ```{r tree1, fig.height=4.5, fig.width=5*(2)}
-tree.fit <- ctree((DX=='Dementia') ~ ABETA + TAU, data = subset(dd, DX!='MCI'), 
+tree.fit <- ctree(DX2 ~ ABETA + TAU, 
+  data = subset(dd, DX!='MCI'), 
   controls = ctree_control(maxdepth=2))
 plot(tree.fit)
 ```
@@ -1093,10 +1095,14 @@ With this shallow tree, we end up with these four partitions of the Abeta-by-Tau
 .pull-left[
 
 ```{r ROC_rf, fig.width=5, fig.height=5}
-tree.fit2 <- ctree((DX=='Dementia') ~ ABETA + TAU, data = subset(dd, DX!='MCI'))
-rf.fit <- cforest((DX=='Dementia') ~ ABETA + TAU, data = subset(dd, DX!='MCI'))
-roc_tree.fit <- roc((DX=='Dementia') ~ predict(tree.fit2, type='response')[,1], subset(dd, DX!='MCI'))
-roc_rf.fit <- roc((DX=='Dementia') ~ predict(rf.fit, type='response')[,1], subset(dd, DX!='MCI'))
+tree.fit2 <- ctree(DX2 ~ ABETA + TAU, data = subset(dd, DX!='MCI'))
+tree.fit2.prob.dem <- predict(tree.fit2, type='prob') %>% 
+  lapply(function(x) x[2]) %>% unlist()
+rf.fit <- cforest(DX2 ~ ABETA + TAU, data = subset(dd, DX!='MCI'))
+rf.fit.prob.dem <- predict(rf.fit, type='prob') %>% 
+  lapply(function(x) x[2]) %>% unlist()
+roc_tree.fit <- roc(DX2 ~ tree.fit2.prob.dem, subset(dd, DX!='MCI'))
+roc_rf.fit <- roc(DX2 ~ rf.fit.prob.dem, subset(dd, DX!='MCI'))
 
 plot(roc_abeta, col='blue')
 plot(roc_tau, add=TRUE, col='orange')
@@ -1125,8 +1131,9 @@ legend("bottomright",
 | Random Forest          | `r roc_rf.fit$auc`       | `r ci(roc_rf.fit)[c(1,3)]`       |  <0.001      |
 $^*$ Bootstrap test comparing each row to $\textrm{A}\beta$ `r Citep(bib=bib, 'pROC')`
 
-Random Forests `r Citep(bib=bib, c('breiman2001', 'hothorn2006'))` re-fit binary trees on random subsamples
-of the data, then aggregate resulting trees into a "forest". This results in smoother predictions and a smoother ROC curve.
+Random Forests `r Citep(bib=bib, c('breiman2001', 'hothorn2006'))` re-fit binary trees on random subsamples of the data, then aggregate resulting trees into a "forest". This results in smoother predictions and a smoother ROC curve.
+
+* All three models should be (cross) validated, since they learn from known Dx.
 
 ```{r, echo=FALSE, eval=FALSE}
 roc.test(roc_abeta, roc_tree.fit)
@@ -1287,7 +1294,8 @@ ggplot(post.df2, aes(x=ABETA, y=TAU, color=`Prob. Abnormal`)) +
 ```{r mvmix_density, fig.width=5, fig.height=5, out.width='100%'}
 plot(mvmixmdl, density = TRUE, alpha = c(0.01, 0.05, 0.10), 
   marginal = FALSE, whichplots=3, main2='', 
-  xlab2='ABETA', ylab2='TAU')
+  xlab2='ABETA', ylab2='TAU',
+  col2=c("#D55E00", "#0072B2"))
 ```
 ]
 

@@ -370,10 +370,14 @@ summary(fit_lme_int)
 # Random intercepts model vs model with random slopes
 
 ```{r trial_lme_apoe_int_vs_slope, size = 'footnotesize', echo = TRUE}
-anova(fit_lme_int, fit_lme)
+fit_lme_int_ml <- update(fit_lme_int, method='ML')
+fit_lme_ml <- update(fit_lme, method="ML")
+anova(fit_lme_int_ml, fit_lme_ml)
 ```
 
 The model with random slopes is preferred (smaller AIC is better)
+
+**Likelihood comparisons are not meaningful for objects fit using restricted maximum likelihood and with different fixed effects.**
 
 ---
 
@@ -627,7 +631,6 @@ ggplot(filter(varPlot, variance=='heterogeneous'),
 #   weights = varIdent(form = ~ 1 | m) )
 # summary(fit_adni)
 ```
-
 
 ---
 
@@ -1015,7 +1018,7 @@ Fit in `R`, using `nlme::gls`:
 ```{r eval=FALSE, echo=TRUE}
 gls(ADAS11 ~  female + age_c +   # bl covs
     ns(months, df=2) +        # natural spline for placebo (1 knot)
-    ns(months, df=2):active   # natural spline for active (1 knot)
+    ns(months, df=2):active,   # natural spline for active (1 knot)
   correlation = corSymm(form = ~ visNo | id), # general correlation
   weights = varIdent(form = ~ 1 | visNo))     # heterogeneous variance
 ```
@@ -1175,10 +1178,10 @@ ggplot(hippvol, aes(x=yrs, y=Hippocampus, color=SITE, group=RID)) +
 
 ```{r, echo=TRUE}
 hipp_fit <- lme(Hippocampus ~ yrs*DX.bl + AGE + PTGENDER + ICV.bl,
-  hippvol, random = ~yrs|RID)
+  hippvol, random = ~yrs|RID, method='ML')
 
 hipp_fit_site <- lme(Hippocampus ~ yrs*DX.bl + AGE + PTGENDER + ICV.bl,
-  hippvol, random = list(SITE = ~ yrs, RID = ~ yrs))
+  hippvol, random = list(SITE = ~ yrs, RID = ~ yrs), method='ML')
 
 anova(hipp_fit_site, hipp_fit)
 ```

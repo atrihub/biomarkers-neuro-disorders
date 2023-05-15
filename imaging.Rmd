@@ -141,7 +141,7 @@ knitr::include_graphics("./images/actc_logo.png")
 .large[
 - Reference Regions
 - Centiloids
-- Standardization using the Empirical Cumulative Distribution Function (ECDF)
+- Harmonization using the Empirical Cumulative Distribution Function (ECDF)
 - Intro to longitudinal data analysis
   - Summaries and plots
   - Regression
@@ -164,7 +164,7 @@ A common issue with statistical analyses of numeric summaries derived from imagi
 
 Examples:
 
-- Volumetric MRI: regional (e.g. hippocampal) volume relative to IntraCranial Volume (ICV)
+- Volumetric MRI: regional (e.g. hippocampal) volume relative to Intra-Cranial Volume (ICV)
 - Amyloid PET: cortical-to-cerebellum Standardized Uptake Value Ratio (SUVr)
 
 (Also an issue in non-imaging data, e.g. ratio of CSF $\textrm{A}\beta_{1-42}$ to $\textrm{A}\beta_{1-40}$)
@@ -187,22 +187,24 @@ Examples abound: %ICV, SUVR, BMI, ...
 
 ```{r }
 dd2 <- subset(ADNIMERGE::adnimerge, VISCODE=='bl' & !is.na(Hippocampus) & DX=='CN') %>%
-  mutate(APOEe4 = ifelse(APOE4>0, 1, 0))
+  mutate(
+   APOEe4 = ifelse(APOE4>0, 1, 0),
+   Sex = factor(PTGENDER, levels = c('Male', 'Female')))
 ```
 
 ```{r , echo=TRUE}
-lm_fit1_gender <- lm(I(Hippocampus/ICV*100) ~ PTGENDER, data=dd2)
+lm_fit1_sex <- lm(I(Hippocampus/ICV*100) ~ Sex, data=dd2)
 ```
 
 ```{r }
-summary(lm_fit1_gender)$coef %>%
+summary(lm_fit1_sex)$coef %>%
   as_tibble(rownames = NA) %>% 
   rownames_to_column(var='Coefficient') %>%
   mutate(`Pr(>|t|)` = format.pval(round(`Pr(>|t|)`, digits = 3), eps = 0.001, digits=3)) %>%
   kable()
 ```
 
-- Signficant association between Gender and Hippocampal Volume (%ICV)!
+- Signficant association between Sex and Hippocampal Volume (%ICV)!
 - (This linear model is essential just a two-sample t-test)
 - Model fit to ADNI CN
 
@@ -211,27 +213,27 @@ summary(lm_fit1_gender)$coef %>%
 # ICV as Covariate Instead of Denominator
 
 ```{r , echo=TRUE}
-lm_fit2_gender <- lm(Hippocampus ~ ICV + PTGENDER, data=dd2)
+lm_fit2_sex <- lm(Hippocampus ~ ICV + Sex, data=dd2)
 ```
 
 ```{r }
-summary(lm_fit2_gender)$coef %>%
+summary(lm_fit2_sex)$coef %>%
   as_tibble(rownames = NA) %>% 
   rownames_to_column(var='Coefficient') %>%
   mutate(`Pr(>|t|)` = format.pval(round(`Pr(>|t|)`, digits = 3), eps = 0.001, digits=3)) %>%
   kable()
 ```
 
-- No association between Gender and Hippocampal Volume ( $\text{mm}^3$ )!
+- No association between Sex and Hippocampal Volume ( $\text{mm}^3$ )!
 - The **spurious association** in first model is driven by denominator (ICV), not numerator (hippocampal volume)
 
 ---
 
-# Hippocampus vs ICV and Gender
+# Hippocampus vs ICV and Sex
 
 .pull-leftWider[
-```{r hipp_gender_scatter, fig.height=4, fig.width=6}
-ggplot(dd2, aes(y=Hippocampus, x=ICV, color=PTGENDER)) +
+```{r hipp_sex_scatter, fig.height=4, fig.width=6}
+ggplot(dd2, aes(y=Hippocampus, x=ICV, color=Sex)) +
   geom_point(alpha=0.5) +
   geom_smooth(method='lm') +
   xlab(expression(paste("ICV (", m*m^{3},")"))) +
@@ -242,7 +244,7 @@ ggplot(dd2, aes(y=Hippocampus, x=ICV, color=PTGENDER)) +
 
 .pull-rightNarrower[
 
-- For a given ICV, there is not much difference between genders
+- For a given ICV, there is not much difference between sexes
 - These linear fits are more flexible than model above (two slopes for ICV vs one)
 
 ]
@@ -251,27 +253,27 @@ ggplot(dd2, aes(y=Hippocampus, x=ICV, color=PTGENDER)) +
 
 # Hippocampal volume ( $\textrm{mm}^3$, %ICV, and model-adjusted)
 
-```{r hipp_gender_box, fig.height=4, fig.width=4*2}
-p1 <- ggplot(dd2, aes(y=Hippocampus, x=PTGENDER)) +
+```{r hipp_sex_box, fig.height=4, fig.width=4*2}
+p1 <- ggplot(dd2, aes(y=Hippocampus, x=Sex)) +
   geom_boxplot(outlier.shape=NA) +
   geom_dotplot(binaxis='y', stackdir='center', 
     dotsize=0.3, alpha=0.2, binwidth=100) +
   xlab('') + ylab(expression(paste("Hippocampus (", m*m^{3},")")))
 
-p2 <- ggplot(dd2, aes(y=ICV, x=PTGENDER)) +
+p2 <- ggplot(dd2, aes(y=ICV, x=Sex)) +
   geom_boxplot(outlier.shape=NA) +
   geom_dotplot(binaxis='y', stackdir='center', 
     dotsize=0.3, alpha=0.2, binwidth=15000) +
   xlab('') + ylab(expression(paste("ICV (", m*m^{3},")")))
 
-p3 <- ggplot(dd2, aes(y=(Hippocampus/ICV*100), x=PTGENDER)) +
+p3 <- ggplot(dd2, aes(y=(Hippocampus/ICV*100), x=Sex)) +
   geom_boxplot(outlier.shape=NA) +
   geom_dotplot(binaxis='y', stackdir='center', 
     dotsize=0.3, alpha=0.2, binwidth=0.0075) +
   xlab('') + ylab("Hippocampus (%ICV)")
 
 p4 <- ggplot(dd2, 
-  aes(y=Hippocampus-ICV*coef(lm_fit2_gender)['ICV'], x=PTGENDER)) +
+  aes(y=Hippocampus-ICV*coef(lm_fit2_sex)['ICV'], x=Sex)) +
   geom_boxplot(outlier.shape=NA) +
   geom_dotplot(binaxis='y', stackdir='center', 
     dotsize=0.3, alpha=0.2, binwidth=100) +
@@ -286,9 +288,9 @@ grid.arrange(p1,p2,p3,p4, nrow=1)
 
 .pull-leftWider[
 
-```{r hipp_adj_gender_scatter, fig.height=4, fig.width=6}
+```{r hipp_adj_sex_scatter, fig.height=4, fig.width=6}
 ggplot(dd2, 
-  aes(y=Hippocampus-ICV*coef(lm_fit2_gender)['ICV'], x=ICV, color=PTGENDER)) +
+  aes(y=Hippocampus-ICV*coef(lm_fit2_sex)['ICV'], x=ICV, color=Sex)) +
   geom_point(alpha=0.5) +
   geom_smooth(method='lm') +
   xlab(expression(paste("ICV (", m*m^{3},")"))) +
@@ -394,7 +396,7 @@ knitr::include_graphics("./images/properzi2019.png")
 
 ???
 
-Another approach is normalizing data from different tracers (or fluid assays for that matter) is map distributions.
+Another approach to normalizing data from different tracers (or fluid assays for that matter) is to map distributions.
 
 If we only have unpaired data from similar populations, we can map one to other under the assumption that their distributions should have similar shape.
 
@@ -431,7 +433,7 @@ ggplot(dd, aes(x=SUVR)) +
 
 CDFs are useful one-to-one maps
 
-Underly random number generators. A random number from a uniform 0-1 distribution can be mapped to any other distribution by the inverse CDF.
+Underlie random number generators. A random number from a uniform 0-1 distribution can be mapped to any other distribution by the inverse CDF.
 
 In this case we can map PiB SUVRs to florbetapir SUVRs or vice versa
 
@@ -485,29 +487,44 @@ dd <- dd %>% mutate(
 
 # Weighted ECDFs to correct for sample differences
 
+```{r, echo=FALSE}
+ecdf.func <- function(x, weights=NULL, 
+  type=c('i/n','(i-1)/(n-1)','i/(n+1)'), 
+  normwt=TRUE, na.rm=TRUE,
+  method = "linear", rule = 2, ...)
+{
+ type <- match.arg(type)
+ ecdf.data <- Hmisc::wtd.Ecdf(x, weights=weights, type=type, 
+  normwt=normwt, na.rm=na.rm)
+ with(ecdf.data, approxfun(x, ecdf,
+  na.rm=na.rm, rule = rule, ...))
+}
+
+inv.ecdf <- function(x, weights = NULL, probs = seq(0,1,by=0.01), 
+  type = c("quantile", "(i-1)/(n-1)", "i/(n+1)", "i/n"), normwt = TRUE, 
+  na.rm = TRUE, rule = 2, ...)
+{
+ type <- match.arg(type)
+ inv.ecdf.data <- as.numeric(
+    Hmisc::wtd.quantile(x, weights=weights, probs=probs, type=type,
+     normwt=normwt, na.rm=na.rm))
+
+ approxfun(probs, inv.ecdf.data, rule=rule, na.rm=na.rm, ...)
+}
+```
+
 ```{r , echo=TRUE}
 # Create adjusted ECDF functions (mapping SUVRs to Cumulative Probabilities)
 # Hmisc::wtd.Ecdf returns a data.frame evaluating the ECDF at each observed value
-PiB.ecdf.data <- with(subset(dd, Tracer == 'PiB'), 
-  Hmisc::wtd.Ecdf(SUVR, weights=wt, normwt=TRUE))
-Fbp.ecdf.data <- with(subset(dd, Tracer == 'Florbetapir'), 
-  Hmisc::wtd.Ecdf(SUVR, weights=wt, normwt=TRUE))
-
-# approxfun creates a function via linear interpolation 
-# mapping SUVRs to cumulative probabilities (0 to 1 scale)
-PiB.ecdf <- with(PiB.ecdf.data, approxfun(x, ecdf, rule=2))
-Fbp.ecdf <- with(Fbp.ecdf.data, approxfun(x, ecdf, rule=2))
+PiB.ecdf <- with(subset(dd, Tracer == 'PiB'), ecdf.func(SUVR, weights=wt))
+Fbp.ecdf <- with(subset(dd, Tracer == 'Florbetapir'), ecdf.func(SUVR, weights=wt))
 
 # Create adjusted **inverse** ECDF functions 
 # mapping Cumulative Probabilities (0 to 1 scale) to SUVRs
-Probs <- seq(0,1,by=0.01)
-PiB.inv.ecdf.data <- as.numeric(with(subset(dd, Tracer == 'PiB'), 
-  Hmisc::wtd.quantile(SUVR, weights=wt, normwt=TRUE, probs=Probs)))
-Fbp.inv.ecdf.data <- as.numeric(with(subset(dd, Tracer == 'Florbetapir'), 
-  Hmisc::wtd.quantile(SUVR, weights=wt, normwt=TRUE, probs=Probs)))
-
-PiB.inv.ecdf <- approxfun(Probs, PiB.inv.ecdf.data, rule=2)
-Fbp.inv.ecdf <- approxfun(Probs, Fbp.inv.ecdf.data, rule=2)
+PiB.inv.ecdf <- with(subset(dd, Tracer == 'PiB'), 
+ inv.ecdf(SUVR, weights=wt))
+Fbp.inv.ecdf <- with(subset(dd, Tracer == 'Florbetapir'),  
+ inv.ecdf(SUVR, weights=wt))
 ```
 
 ---
@@ -545,7 +562,7 @@ ggplot(dd, aes(x=SUVR)) +
 
 ---
 
-# Centiloids vs ADNI Percentiles
+# Centiloids vs ADNI Adjusted Percentiles
 
 ```{r}
 dd %>% filter(Tracer == 'PiB') %>%
@@ -865,8 +882,9 @@ class: inverse, middle, center
 
 
 ```{r echo=FALSE}
-fit_adni <- lme(ADAS11 ~ PTGENDER + center(AGE) + I(Years.bl*12), 
-  data=ADNIMERGE::adnimerge,
+fit_adni <- lme(ADAS11 ~ Sex + center(AGE) + I(Years.bl*12), 
+  data=ADNIMERGE::adnimerge %>%
+  mutate(Sex = factor(PTGENDER, levels = c('Male', 'Female'))),
   random=~M|RID, subset = M<=24 & DX.bl=='AD', na.action=na.omit)
 summary(fit_adni)
 ```
@@ -1008,7 +1026,7 @@ summary(tab, text=TRUE) %>% kable()
 ```{r spaghetti_plot}
 ggplot(trial_obs, aes(x=month, y=ADAS11, group=id, color=group)) + 
   geom_line(alpha=0.25) +
-  geom_smooth(aes(group = NULL), method = 'lm', size = 2) +
+  geom_smooth(aes(group = NULL), method = 'lm', linewidth = 2) +
   scale_x_continuous(breaks=months) +
   theme(legend.position=c(0.1, 0.85), legend.background = element_rect(fill=NA))
 ```

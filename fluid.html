@@ -58,6 +58,7 @@ Topics:
 
 - Hour 1 -- Biostatistics for Fluid Biomarkers
 - Hour 2 -- Biostatistics for Imaging Biomarkers
+  - Intro to Longitudinal Data
 - Hour 3 -- Modeling Longitudinal Data
 
 Emphases:
@@ -257,8 +258,8 @@ One way to ensure this, is to randomize samples to batches
 - Randomize samples to batches/plates
 - Longitudinally collected samples (samples collected over time on same individual):
   - If batch effects are expected to be larger than storage effects, consider randomizing *individuals* to batches (i.e. keep all samples from individual on the same plate)
-  - However, if storage effects are a concern, 
-- Randomization can be stratified to ensure important factors (e.g. treatment group, age, APOE `\(\epsilon4\)`) are balanced
+  - However, if storage effects are a concern, timely sample processing might be preferred.
+- Randomization can be stratified to ensure important factors (e.g. treatment group, age, APOE `\(\epsilon4\)`) are balanced over batches.
 ]
 
 ---
@@ -571,7 +572,7 @@ allowing the variance to depend on the mean.
 
 ???
 
-The mean does not change much, but we get more accurate 95% confidence bands
+The mean does not change much, but we get more accurate and tighter 95% confidence bands
 
 ---
 
@@ -722,11 +723,11 @@ So the ratio of Tau / `\(\textrm{A}\beta\)` shows the best discrimination of NC 
 
 &lt;img src="fluid_fig/abeta_tau_scatter_youden-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 
-Line is Tau = 0.394 `\(\times\)` Abeta, depicting Youden's cutoff (maximizes sensitivity + specificity - 1)
+Line is Tau = 0.394 `\(\times\)` Abeta, depicting Youden's cutoff (maximizes sensitivity + specificity)
 
 ???
 
-Youden's cutoff maximizing sensitivity + specificity - 1 is appropriate if sensitivity and specificity are equally important
+Youden's cutoff maximizing sensitivity + specificity is appropriate if sensitivity and specificity are equally important
 
 ---
 
@@ -942,8 +943,9 @@ With this shallow tree, we end up with these four partitions of the Abeta-by-Tau
 | Random Forest          | 0.95       | 0.93, 0.96       |  &lt;0.001      |
 `\(^*\)` Bootstrap test comparing each row to `\(\textrm{A}\beta\)` (Robin et al., 2011)
 
-Random Forests (Breiman, 2001; Hothorn et al., 2006) re-fit binary trees on random subsamples
-of the data, then aggregate resulting trees into a "forest". This results in smoother predictions and a smoother ROC curve.
+Random Forests (Breiman, 2001; Hothorn et al., 2006) re-fit binary trees on random subsamples of the data, then aggregate resulting trees into a "forest". This results in smoother predictions and a smoother ROC curve.
+
+* All three models should be (cross) validated, since they learn from known Dx.
 
 
 

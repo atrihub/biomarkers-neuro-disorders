@@ -356,13 +356,17 @@ Number of Groups: 400
 
 
 ```r
-anova(fit_lme_int, fit_lme)
-            Model df  AIC  BIC logLik   Test L.Ratio p-value
-fit_lme_int     1  5 8734 8761  -4362                       
-fit_lme         2  7 8501 8537  -4243 1 vs 2     238  &lt;.0001
+fit_lme_int_ml &lt;- update(fit_lme_int, method='ML')
+fit_lme_ml &lt;- update(fit_lme, method="ML")
+anova(fit_lme_int_ml, fit_lme_ml)
+               Model df  AIC  BIC logLik   Test L.Ratio p-value
+fit_lme_int_ml     1  5 8723 8749  -4356                       
+fit_lme_ml         2  7 8490 8527  -4238 1 vs 2     236  &lt;.0001
 ```
 
 The model with random slopes is preferred (smaller AIC is better)
+
+**Likelihood comparisons are not meaningful for objects fit using restricted maximum likelihood and with different fixed effects.**
 
 ---
 
@@ -520,7 +524,6 @@ You can imagine what can go wrong if we assume the left-hand side instead. We wo
 # Uncorrelated vs correlated residuals
 
 &lt;img src="long_fig/unnamed-chunk-11-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
-
 
 
 
@@ -921,7 +924,7 @@ Fit in `R`, using `nlme::gls`:
 ```r
 gls(ADAS11 ~  female + age_c +   # bl covs
     ns(months, df=2) +        # natural spline for placebo (1 knot)
-    ns(months, df=2):active + # natural spline for active (1 knot)
+    ns(months, df=2):active,   # natural spline for active (1 knot)
   correlation = corSymm(form = ~ visNo | id), # general correlation
   weights = varIdent(form = ~ 1 | visNo))     # heterogeneous variance
 ```
@@ -942,7 +945,7 @@ difficulty.
 
 ---
 
-## Modeled group contrasts for categorical, quadratic, and natrual cubic spline models
+## Modeled group contrasts for categorical, quadratic, and natural cubic spline models
 
 &lt;img src="long_fig/unnamed-chunk-30-1.svg" width="100%"  style="display: block; margin: auto;" /&gt;
 
@@ -1061,15 +1064,15 @@ class: inverse, middle, center
 
 ```r
 hipp_fit &lt;- lme(Hippocampus ~ yrs*DX.bl + AGE + PTGENDER + ICV.bl,
-  hippvol, random = ~yrs|RID)
+  hippvol, random = ~yrs|RID, method='ML')
 
 hipp_fit_site &lt;- lme(Hippocampus ~ yrs*DX.bl + AGE + PTGENDER + ICV.bl,
-  hippvol, random = list(SITE = ~ yrs, RID = ~ yrs))
+  hippvol, random = list(SITE = ~ yrs, RID = ~ yrs), method='ML')
 
 anova(hipp_fit_site, hipp_fit)
               Model df   AIC   BIC logLik   Test L.Ratio p-value
-hipp_fit_site     1 20 95002 95138 -47481                       
-hipp_fit          2 17 95016 95132 -47491 1 vs 2  20.027   2e-04
+hipp_fit_site     1 20 95081 95216 -47520                       
+hipp_fit          2 17 95094 95209 -47530 1 vs 2      19   3e-04
 ```
 
 ---
