@@ -986,6 +986,7 @@ Natural Cubic Spline `r Citep(bib=bib, 'schoenberg1964spline')`:
 
   + "natural" implies second derivatives are zero at boundaries
 
++ See `r Citet(bib=bib, 'donohue2023natural')` for applications to Alzheimer's trials
 ]
 
 ???
