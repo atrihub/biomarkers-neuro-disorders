@@ -10,8 +10,6 @@ The biostatistics module topics include:
 
 ## Biostatistics for fluid and imaging biomarkers (hour 1, Mike Donohue)
 
-### Biostatistics for fluid Biomarkers
-
 - Batch Effects
 - Experimental Design (Sample Randomization)
 - Statistical Models for Assay Calibration/Quantification
@@ -23,14 +21,11 @@ The biostatistics module topics include:
   - Univariate
   - Bivariate
   - With covariates (Mixture of Experts)
-
-### Biostatistics for imaging biomarkers
-
 - Reference Regions
 - Centiloids
 - Standardization using the Empirical Cumulative Distribution Function (ECDF)
 
-### Longitudinal Data (hour 2, Lars Racket)
+## Longitudinal Data (hour 2, Lars Racket)
 
 - Mixed effect models
 - Mean & Variance Structure
