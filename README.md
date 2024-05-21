@@ -1,6 +1,6 @@
 # Biomarkers for Neurodegenerative Disorders
 
-This repository hosts the course materials for the biostatistics module of the [Biomarkers for Neurodegenerative Disorders](https://www.barcelonabeta.org/en/community/events/6th-workshop-biomarkers-neurodegenerative-diseases) course at BarcelonaBeta Brain Research Center, May 15 to 19, 2023.
+This repository hosts the course materials for the biostatistics module of the [Biomarkers for Neurodegenerative Disorders](https://biomarker-course.org/) course at BarcelonaBeta Brain Research Center, May 20 to 24 2024.
 
 Statistical and visualization techniques will be demonstrated using [R](https://www.r-project.org/) applied to data from the [Alzheimer's Disease Neuroimaging Initiative (ADNI)](http://adni.loni.usc.edu/). If you would like to execute the R code on your own machine, you should [apply for access](http://adni.loni.usc.edu/data-samples/access-data/) to ADNI and [download and install the ADNIMERGE R package](https://adni.loni.usc.edu/wp-content/uploads/2012/08/instruction-ADNIMERGE-packages.pdf).
 
@@ -8,7 +8,9 @@ Statistical and visualization techniques will be demonstrated using [R](https://
 
 The biostatistics module topics include:
 
-### Biostatistics for Fluid Biomarkers (hour 1)
+## Biostatistics for fluid and imaging biomarkers (hour 1, Mike Donohue)
+
+### Biostatistics for fluid Biomarkers
 
 - Batch Effects
 - Experimental Design (Sample Randomization)
@@ -22,7 +24,7 @@ The biostatistics module topics include:
   - Bivariate
   - With covariates (Mixture of Experts)
 
-### Biostatistics for Imaging Biomarkers (hour 2)
+### Biostatistics for imaging biomarkers
 
 - Reference Regions
 - Centiloids
@@ -33,7 +35,7 @@ The biostatistics module topics include:
   - ANCOVA
   - Two-stage models
 
-### Longitudinal Data (hour 3)
+### Longitudinal Data (hour 2, Lars Racket)
 
 - Mixed effect models
 - Mean & Variance Structure
