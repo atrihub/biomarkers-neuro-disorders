@@ -803,7 +803,7 @@ ggplot(subset(dd, DX!='MCI'), aes(x=ABETA, y=TAU)) +
 
 ---
 
-# Reciever Operatoring Characteristic (ROC) Curves
+# Reciever Operating Characteristic (ROC) Curves
 
 .pull-left[
 
